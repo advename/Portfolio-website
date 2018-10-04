@@ -296,7 +296,7 @@ nav {
    ========================================================================== */
 :root {
   /* HERO */
-  --tech-wrapper-height: 80vh;
+  --tech-wrapper-height: 90vh;
   --tech-wrapper-width: 80vw;
 }
 #tech h2 {
@@ -312,11 +312,12 @@ nav {
   right: 0;
   bottom: 0;
   margin: auto;
+  padding-top: calc((100vh - var(--tech-wrapper-height)) / 2);
 }
 
 #tech .animation {
   position: relative;
-  top: 50%;
+  top: 40%;
   transform: translateY(-50%);
   display: block;
 }
@@ -357,6 +358,7 @@ nav {
   position: relative;
   z-index: 20;
   float: right;
+  margin-top: 10px;
 }
 
 /* The dot */
@@ -412,7 +414,7 @@ nav {
 
   animation-name: dot3;
 }
-/*
+
 @keyframes dot1 {
   3%,
   97% {
@@ -497,7 +499,46 @@ nav {
     border-radius: 10px;
   }
 }
-*/
+
+#tech .slider {
+  background: #282828;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 100px;
+  padding-bottom: 10px;
+}
+
+#tech .slider .box {
+  width: var(--tech-wrapper-width);
+  max-width: 1024px;
+  height: 100px;
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto;
+}
+
+#tech .slider .container {
+  height: 100px;
+  white-space: nowrap;
+  position: relative;
+  left: 0;
+}
+
+#tech .slider .item {
+  height: 80px;
+  text-align: center;
+  padding: 10px 0;
+  min-width: 120px;
+  display: inline-block;
+  white-space: normal;
+}
+#tech .slider .item img {
+  height: 70%;
+  width: auto;
+  margin: 0 auto;
+}
+
 /* ==========================================================================
    Media Queries
    ========================================================================== */

@@ -3,20 +3,14 @@
    ========================================================================== */
 //*** Variables
 const circles = document.querySelectorAll(".circles"); //background circles
-let vh,
-  vw,
-  mouseX,
-  mouseY,
-  centerX,
-  centerY,
-  sectionCheckInterval,
-  circleMaxW,
-  circleTL;
+let vh, vw, centerX, centerY, sectionCheckInterval, circleMaxW, circleTL;
 let sectionActive = "hero"; //on page load, hero section is the first visible one
 let previousSection = "hero";
 let additioner = 0;
 let allowCircleAnimation = true;
 let isMobile = false; //used to define if on mobile devices or not
+let mouseX = 400;
+let mouseY = 0;
 
 //*** Hero
 const heroTitle = document.querySelector("#hero .title");
@@ -32,7 +26,17 @@ let introActivated = false;
 //*** Technology
 const techWrapper = document.querySelector("#tech .wrapper");
 const techLineDOM = document.querySelector("#tech .animation .line");
-let techStartX, techDistance, techCirclesTL;
+const techSlider = document.querySelector("#tech .slider");
+const techTemplate = document.querySelector("#tech-template").content;
+const techContainer = document.querySelector("#tech .slider .container");
+let techStartX,
+  techDistance,
+  techCirclesTL,
+  techSlideData,
+  techSliderInterval,
+  techContainerWidth;
+let techSliderPos = -400;
+let techMousemove = 0;
 
 //*** Portfolio
 
@@ -67,7 +71,6 @@ function init() {
   //Check each 500ms which section is currently displayed
   sectionCheckInterval = setInterval(() => {
     sectionCheck();
-    console.log(sectionActive);
   }, 100);
 
   // Make GSAP Timeline
@@ -79,6 +82,22 @@ function init() {
 
   //Place circles in hero section
   heroCirclesCordinates();
+
+  //Populate Tech data and display
+  techSetSlideData();
+  techDisplayData(); //call twice for smooth slider repeat
+  techDisplayData(); //call twice for smooth slider repeat
+
+  //Tech mouse move for slider
+
+  techSliderInterval = setInterval(() => {
+    techSliderMouseMove();
+  }, 10);
+
+  //Tech container width for slider repeat
+  techContainerWidth = techContainer.scrollWidth;
+  techContainer.style.left = -(techContainerWidth / 2) + "px"; //position slider in center
+  console.log(techContainerWidth);
 }
 
 function test() {
@@ -92,6 +111,7 @@ function mouseAnimations(e) {
   mouseX = e.pageX;
   mouseY = e.pageY;
   heroMouseAnimation(e);
+  techSliderMouseMove();
 }
 
 /* ==========================================================================
@@ -113,6 +133,8 @@ function sectionCheck() {
     //hero
     sectionActive = "hero";
     heroCirclesCordinates();
+
+    clearInterval(techSliderInterval);
   } else if (top > vh - repositionSooner && top <= vh * 2 - repositionSooner) {
     //intro
     sectionActive = "intro";
@@ -125,6 +147,7 @@ function sectionCheck() {
       introHeadlineWhiteBarAnimation();
       introActivated = !introActivated;
     }
+    clearInterval(techSliderInterval);
   } else if (
     top > vh * 2 - repositionSooner &&
     top <= vh * 3 - repositionSooner
@@ -132,18 +155,21 @@ function sectionCheck() {
     //tech
     sectionActive = "tech";
     techCirclesCoordinates();
+    techSliderInterval;
   } else if (
     top > vh * 3 - repositionSooner &&
     top <= vh * 4 - repositionSooner
   ) {
     //portfolio
     sectionActive = "port";
+    clearInterval(techSliderInterval);
   } else if (top > vh * 4 - repositionSooner) {
-    //intro
+    //contact
     sectionActive = "contact";
+    clearInterval(techSliderInterval);
   }
 
-  //Allow circle animation or not
+  //Allow circle animation or not -> run animation only once
   if (previousSection === sectionActive) {
     allowCircleAnimation = false;
   } else {
@@ -152,8 +178,9 @@ function sectionCheck() {
   }
 }
 
-//Reposition Circles
+//Reposition Circles in px
 function repositionCircles(cord) {
+  //Set additioner based on active section (vh * additioner)
   additioner = {
     hero: 0,
     intro: 1,
@@ -162,13 +189,15 @@ function repositionCircles(cord) {
     contact: 4
   }[sectionActive];
 
+  //Run animation only once for each section change
   if (allowCircleAnimation === true) {
     //Update each circle with their coordinates and fire gsap
 
     const duration = 1.3;
-    techCirclesTL.pause();
-    circleTL.clear();
+    techCirclesTL.pause(); //pause tech-circles
+    circleTL.clear(); //clear previous timeline
 
+    //New timeline
     circleTL
       .to(
         circles[0],
@@ -212,6 +241,7 @@ function repositionCircles(cord) {
           width: cord[3].size,
           height: cord[3].size,
           onComplete: function() {
+            //If tech section, add another TimeLine for line-bar
             if (sectionActive === "tech") {
               techCirclesAnimation();
               techCirclesTL.play();
@@ -228,6 +258,7 @@ function repositionCircles(cord) {
 
 //Calculate x for circles
 function calcX(x) {
+  x = x > 1200 ? 1200 : x;
   return (x / 100) * circleMaxW + "px";
 }
 
@@ -357,7 +388,7 @@ function introHeadlineWhiteBarAnimation() {
    Technologies
    ========================================================================== */
 
-//Update circles position to hero
+//Update circles position to tech
 function techCirclesCoordinates() {
   const circleSize = "20px";
 
@@ -367,8 +398,8 @@ function techCirclesCoordinates() {
   let startX = techLine.left + "px";
   techStartX = startX;
   let stopX = techLine.right + "px";
-  let distance = techLine.right - techLine.left + "px";
-  techDistance = distance;
+  let distance = techLine.right - techLine.left - 10;
+  techDistance = distance > 720 ? "690px" : distance + "px"; //distance
 
   const cord = [
     {
@@ -392,43 +423,7 @@ function techCirclesCoordinates() {
       y: posY
     }
   ];
-  repositionCircles(cord, "hero");
-
-  /*
-    if (!techCirclesActive) {
-      techCirclesActive = true;
-      //only run the circles if the animation state is false, else another animation is running
-      let tl = new TimelineMax();
-      const duration = 1.3;
-
-      circleTL.clear();
-      circleTL
-        .fromTo(circles[0], duration, { x: startX, y: posY }, { x: distance })
-        .fromTo(
-          circles[1],
-          duration,
-          { x: startX, y: posY, delay: duration },
-          { x: distance, ease: Power0.easeNone }
-        )
-        .fromTo(
-          circles[2],
-          duration,
-          { x: startX, y: posY, delay: duration },
-          { x: distance, ease: Power0.easeNone }
-        )
-        .fromTo(
-          circles[3],
-          duration,
-          { x: startX, y: posY, delay: duration },
-          {
-            x: distance,
-            ease: Power0.easeNone,
-            onComplete: function() {
-              techCirclesActive = false;
-            }
-          }
-        );
-    }*/
+  repositionCircles(cord);
 }
 
 function techCirclesAnimation() {
@@ -460,4 +455,135 @@ function techCirclesAnimation() {
         }
       }
     );
+}
+
+function techSetSlideData() {
+  techSlideData = [
+    {
+      title: "NodeJS",
+      img: "nodejs.svg"
+    },
+    {
+      title: "After Effects",
+      img: "after-effects.svg"
+    },
+    {
+      title: "Chart.js",
+      img: "chart.js.svg"
+    },
+    {
+      title: "CSS",
+      img: "css.svg"
+    },
+    {
+      title: "Dynamic Data",
+      img: "dynamic-data.svg"
+    },
+    {
+      title: "GreenSock",
+      img: "greensock.svg"
+    },
+    {
+      title: "Hammer.JS",
+      img: "hammerjs.svg"
+    },
+    {
+      title: "HTML",
+      img: "html.svg"
+    },
+    {
+      title: "Illustrator",
+      img: "illustrator.svg"
+    },
+    {
+      title: "JPG",
+      img: "jpg.svg"
+    },
+    {
+      title: "JavaScript",
+      img: "js.svg"
+    },
+    {
+      title: "JSON",
+      img: "json.svg"
+    },
+    {
+      title: "MP4",
+      img: "mp4.svg"
+    },
+    {
+      title: "Photoshop",
+      img: "photoshop.svg"
+    },
+    {
+      title: "PNG",
+      img: "png.svg"
+    },
+    {
+      title: "Premiere Pro",
+      img: "premiere-pro.svg"
+    },
+    {
+      title: "React",
+      img: "react.svg"
+    },
+    {
+      title: "SASS",
+      img: "sass.svg"
+    },
+    {
+      title: "SEO",
+      img: "seo.svg"
+    },
+    {
+      title: "WordPress",
+      img: "wordpress.svg"
+    },
+    {
+      title: "Adobe XD",
+      img: "xd.svg"
+    }
+  ];
+}
+
+function techDisplayData() {
+  techSlideData.forEach(item => {
+    let clone = techTemplate.cloneNode(true);
+    clone
+      .querySelector("img")
+      .setAttribute("src", "assets/icons/technologies/" + item.img);
+    clone.querySelector("p").textContent = item.title;
+
+    techContainer.appendChild(clone);
+  });
+}
+
+function techSliderMouseMove() {
+  const buffer = 100; // how far compared to screen size to travel
+  const delay = 0.1; // delay of smoothnes
+
+  if (!isNaN(mouseX)) {
+    //Reposition title
+    if (mouseX < centerX) {
+      //console.log("Moving left");
+      //move to the left
+      techMousemove = -Math.abs(mouseX - centerX) / buffer;
+    } else {
+      //move to the right
+      techMousemove = Math.abs(mouseX - centerX) / buffer;
+    }
+  }
+
+  techSliderPos = techSliderPos + techMousemove;
+
+  if (techSliderPos > 0) {
+    techSliderPos = -(techContainerWidth / 2);
+  } else if (techSliderPos < -(techContainerWidth / 2)) {
+    techSliderPos = 0;
+  }
+  //console.log(techSliderPos);
+  //console.log("=====");
+  //console.log(techSliderPos);
+  techContainer.style.left = techSliderPos + "px";
+  //TweenMax.to(techContainer, 0.01, { x: techSliderPos + "px" });
 }
