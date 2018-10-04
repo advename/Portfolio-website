@@ -1,0 +1,519 @@
+/* ==========================================================================
+   General
+   ========================================================================== */
+
+:root {
+  /* HERO */
+  /*--hero-wrapper-width: 70vw;*/
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  max-width: 100%;
+  /*font-family: "Open Sans", sans-serif;*/
+  font-family: "Quicksand", sans-serif;
+  font-weight: 400; /* 400 - regular*/
+  position: relative;
+  background: #202020;
+  color: #e3e3e3;
+  overflow-x: hidden;
+}
+
+main {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#hero,
+#intro,
+#tech,
+#port,
+#contact {
+  position: relative;
+  width: 100vw;
+  max-width: 100%;
+  min-height: 100vh;
+}
+
+.circles {
+  position: absolute;
+  z-index: -1;
+  height: 30px;
+  width: 30px;
+  background: #f3f3f3;
+  border-radius: 50%;
+}
+
+/* Clear float */
+.clearfix {
+  content: "";
+  clear: both;
+  display: block;
+}
+
+/* ==========================================================================
+   Navigation and Burger Menu
+   ========================================================================== */
+
+#burger-menu {
+  position: fixed;
+  top: 20px;
+  left: 30px;
+  width: 30px;
+  height: 30px;
+  z-index: 50;
+  cursor: pointer;
+}
+
+#burger-menu span {
+  width: 30px;
+  height: 3px;
+  margin-top: 5px;
+  background: white;
+  display: block;
+}
+#burger-menu span:nth-of-type(2) {
+  width: 20px;
+  height: 2px;
+  margin-top: 5px;
+  margin-left: 2px;
+  background: white;
+  display: block;
+}
+
+nav {
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+
+#hero .wrapper {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-gap: 0px;
+  width: 70vw;
+  max-width: 860px;
+  height: 50vmin;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#hero .wrapper > div {
+  position: relative;
+}
+
+#hero .title {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto 0;
+  grid-column: span 5;
+}
+
+#hero .title h1 {
+  font-size: 40px;
+}
+
+#hero .title p {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+}
+
+#hero .title-image {
+  width: 100%;
+  grid-column: span 3;
+}
+#hero .title-image img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto 0;
+  width: 100%;
+}
+
+/*
+   Scroll mouse
+   ========================================================================== */
+
+#hero #scroll-hint {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  right: 0px;
+  margin: 0 auto;
+  width: 109px;
+}
+
+#hero #scroll-hint .mouse {
+  position: relative;
+  margin: 0 auto;
+  height: 34px;
+  width: 19px;
+  border: 1px solid white;
+  border-radius: 20px;
+}
+
+#hero #scroll-hint .dot {
+  width: 3px;
+  height: 6px;
+  background-color: white;
+  position: relative;
+  top: 3px;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
+  border-radius: 5px;
+  animation: scrollMouse 1.2s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes scrollMouse {
+  50% {
+    opacity: 1;
+    top: 15px;
+  }
+  100% {
+    opacity: 0;
+    top: 20px;
+  }
+}
+
+#hero #scroll-hint p {
+  font-size: 12px;
+}
+
+/* ==========================================================================
+   Intro
+   ========================================================================== */
+
+:root {
+  /* HERO */
+  --intro-wrapper-height: 80vmin;
+}
+#intro .wrapper {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  column-gap: 20px;
+  width: 80vw;
+  max-width: 1024px;
+  height: var(--intro-wrapper-height);
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#intro .wrapper > div {
+  position: relative;
+  grid-column: span 4;
+  height: calc(var(--intro-wrapper-height) / 2);
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#intro .image {
+  width: 100%;
+}
+
+#intro .image img {
+  height: calc(var(--intro-wrapper-height) / 2 - 50px);
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#intro .headline {
+  display: table;
+  text-align: center;
+}
+
+#intro .headline h2 {
+  display: table-cell;
+  vertical-align: middle;
+  font-size: 45px;
+  opacity: 0;
+}
+
+#intro .white-bar-headline {
+  position: absolute;
+  height: 50px;
+  width: 0vw;
+  background: #e3e3e3;
+  right: 0;
+  top: 0;
+}
+
+#intro .description {
+  width: 90%;
+  display: table;
+  text-align: justify;
+}
+
+#intro .description p {
+  display: table-cell;
+  vertical-align: middle;
+  line-height: 30px;
+}
+
+#intro .map {
+  display: table;
+  text-align: justify;
+  width: 100%;
+}
+
+#intro .map svg {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+#intro .map svg .cls-2 {
+  fill: #fff;
+}
+/* ==========================================================================
+   Technologies
+   ========================================================================== */
+:root {
+  /* HERO */
+  --tech-wrapper-height: 80vh;
+  --tech-wrapper-width: 80vw;
+}
+#tech h2 {
+  font-size: 35px;
+}
+#tech .wrapper {
+  width: var(--tech-wrapper-width);
+  max-width: 1024px;
+  height: var(--tech-wrapper-height);
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+#tech .animation {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  display: block;
+}
+
+#tech .code-editor {
+  position: relative;
+  float: left;
+  z-index: 20;
+}
+
+#tech .code-editor svg {
+  width: calc(var(--tech-wrapper-width) / 3);
+  max-width: 341px;
+}
+#tech .code-editor svg .cls-1 {
+  stroke: none;
+  stroke-miterlimit: 0;
+  stroke-width: 0;
+}
+
+#tech .line {
+  height: 2px;
+  width: calc(var(--tech-wrapper-width) - 200px);
+  max-width: 824px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  margin: auto;
+  background: white;
+  z-index: 15;
+}
+
+#tech .device {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  z-index: 20;
+  float: right;
+}
+
+/* The dot */
+#tech .device .dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 10;
+
+  width: 160px;
+  height: 100px;
+
+  margin-top: -50px;
+  margin-left: -80px;
+
+  border-radius: 5px;
+
+  background-color: #1e3f57;
+
+  transform-type: preserve-3d;
+
+  animation: dot1 3s cubic-bezier(0.55, 0.3, 0.24, 0.99) infinite;
+}
+
+#tech .device .dot:nth-child(2) {
+  z-index: 11;
+
+  width: 150px;
+  height: 90px;
+
+  margin-top: -45px;
+  margin-left: -75px;
+
+  border-radius: 3px;
+
+  background-color: #3c617d;
+
+  animation-name: dot2;
+}
+
+#tech .device .dot:nth-child(3) {
+  z-index: 12;
+
+  width: 40px;
+  height: 20px;
+
+  margin-top: 50px;
+  margin-left: -20px;
+
+  border-radius: 0 0 5px 5px;
+
+  background-color: #6bb2cd;
+
+  animation-name: dot3;
+}
+/*
+@keyframes dot1 {
+  3%,
+  97% {
+    width: 160px;
+    height: 100px;
+
+    margin-top: -50px;
+    margin-left: -80px;
+  }
+  30%,
+  36% {
+    width: 80px;
+    height: 120px;
+
+    margin-top: -60px;
+    margin-left: -40px;
+  }
+  63%,
+  69% {
+    width: 40px;
+    height: 80px;
+
+    margin-top: -40px;
+    margin-left: -20px;
+  }
+}
+
+@keyframes dot2 {
+  3%,
+  97% {
+    width: 150px;
+    height: 90px;
+
+    margin-top: -45px;
+    margin-left: -75px;
+  }
+  30%,
+  36% {
+    width: 70px;
+    height: 96px;
+
+    margin-top: -48px;
+    margin-left: -35px;
+  }
+  63%,
+  69% {
+    width: 32px;
+    height: 60px;
+
+    margin-top: -30px;
+    margin-left: -16px;
+  }
+}
+
+@keyframes dot3 {
+  3%,
+  97% {
+    width: 40px;
+    height: 20px;
+
+    margin-top: 50px;
+    margin-left: -20px;
+  }
+  30%,
+  36% {
+    width: 8px;
+    height: 8px;
+
+    margin-top: 49px;
+    margin-left: -5px;
+
+    border-radius: 8px;
+  }
+  63%,
+  69% {
+    width: 16px;
+    height: 4px;
+
+    margin-top: -37px;
+    margin-left: -8px;
+
+    border-radius: 10px;
+  }
+}
+*/
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
+
+/* Small devices (landscape phones, 576px and up) */
+@media (max-width: 576px) {
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (max-width: 768px) {
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (max-width: 992px) {
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (max-width: 1200px) {
+}
