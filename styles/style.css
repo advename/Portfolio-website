@@ -333,6 +333,7 @@ nav {
   max-width: 341px;
 }
 #tech .code-editor svg .cls-1 {
+  /* remove white lines*/
   stroke: none;
   stroke-miterlimit: 0;
   stroke-width: 0;
@@ -380,7 +381,7 @@ nav {
 
   transform-type: preserve-3d;
 
-  animation: dot1 3s cubic-bezier(0.55, 0.3, 0.24, 0.99) infinite;
+  animation: dot1 5s cubic-bezier(0.55, 0.3, 0.24, 0.99) infinite;
 }
 
 #tech .device .dot:nth-child(2) {

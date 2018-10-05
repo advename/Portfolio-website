@@ -34,9 +34,12 @@ let techStartX,
   techCirclesTL,
   techSlideData,
   techSliderInterval,
-  techContainerWidth;
+  techContainerWidth,
+  techEditorLines,
+  techEditorCodeTL;
 let techSliderPos = -400;
 let techMousemove = 0;
+let techEditorLinesWidth = [];
 
 //*** Portfolio
 
@@ -89,15 +92,21 @@ function init() {
   techDisplayData(); //call twice for smooth slider repeat
 
   //Tech mouse move for slider
-
-  techSliderInterval = setInterval(() => {
+  /*techSliderInterval = setInterval(() => {
     techSliderMouseMove();
-  }, 10);
+  }, 10);*/
 
   //Tech container width for slider repeat
   techContainerWidth = techContainer.scrollWidth;
   techContainer.style.left = -(techContainerWidth / 2) + "px"; //position slider in center
   console.log(techContainerWidth);
+
+  //Tech Code Editor animation setup
+  techEditorLines = document.querySelectorAll(
+    "#tech .code-editor svg [id*='editor-lines']"
+  );
+  techCodeEditorSetup();
+  techCodeEditorAnimation();
 }
 
 function test() {
@@ -155,7 +164,12 @@ function sectionCheck() {
     //tech
     sectionActive = "tech";
     techCirclesCoordinates();
-    techSliderInterval;
+    //Tech mouse move for slider
+    /*
+    techSliderInterval = setInterval(() => {
+      techSliderMouseMove();
+    }, 10);
+    */
   } else if (
     top > vh * 3 - repositionSooner &&
     top <= vh * 4 - repositionSooner
@@ -559,7 +573,7 @@ function techDisplayData() {
 }
 
 function techSliderMouseMove() {
-  const buffer = 100; // how far compared to screen size to travel
+  const buffer = 1000; // how far compared to screen size to travel
   const delay = 0.1; // delay of smoothnes
 
   if (!isNaN(mouseX)) {
@@ -586,4 +600,119 @@ function techSliderMouseMove() {
   //console.log(techSliderPos);
   techContainer.style.left = techSliderPos + "px";
   //TweenMax.to(techContainer, 0.01, { x: techSliderPos + "px" });
+}
+
+function techCodeEditorSetup() {
+  techEditorCodeTL = new TimelineMax({ repeat: -1, repeatDelay: 1 });
+  techEditorLines.forEach(line => {
+    let temp = line.getAttribute("width") + "px";
+    techEditorLinesWidth.push(temp);
+  });
+  techEditorLinesWidth;
+}
+
+function techCodeEditorAnimation() {
+  const duration = 0.7;
+  const easeProcess = Power1.easeOut;
+
+  techEditorCodeTL
+    .fromTo(
+      techEditorLines[10],
+      duration,
+      { width: 0 },
+      {
+        width: techEditorLinesWidth[10],
+        ease: easeProcess
+      }
+    )
+    .fromTo(
+      techEditorLines[9],
+      duration,
+      { width: 0 },
+      {
+        width: techEditorLinesWidth[9],
+        ease: easeProcess
+      }
+    )
+    .fromTo(
+      techEditorLines[8],
+      duration,
+      { width: 0 },
+      {
+        width: techEditorLinesWidth[8],
+        ease: easeProcess
+      }
+    )
+    .fromTo(
+      techEditorLines[7],
+      duration,
+      { width: 0 },
+      {
+        width: techEditorLinesWidth[7],
+        ease: easeProcess
+      }
+    )
+    .fromTo(
+      techEditorLines[6],
+      duration,
+      { width: 0 },
+      {
+        width: techEditorLinesWidth[6],
+        ease: easeProcess
+      }
+    )
+    .fromTo(
+      techEditorLines[5],
+      duration,
+      { width: 0 },
+      {
+        width: techEditorLinesWidth[5],
+        ease: easeProcess
+      }
+    )
+    .fromTo(
+      techEditorLines[4],
+      duration,
+      { width: 0 },
+      {
+        width: techEditorLinesWidth[4],
+        ease: easeProcess
+      }
+    )
+    .fromTo(
+      techEditorLines[3],
+      duration,
+      { width: 0 },
+      {
+        width: techEditorLinesWidth[3],
+        ease: easeProcess
+      }
+    )
+    .fromTo(
+      techEditorLines[2],
+      duration,
+      { width: 0 },
+      {
+        width: techEditorLinesWidth[2],
+        ease: easeProcess
+      }
+    )
+    .fromTo(
+      techEditorLines[1],
+      duration,
+      { width: 0 },
+      {
+        width: techEditorLinesWidth[1],
+        ease: easeProcess
+      }
+    )
+    .fromTo(
+      techEditorLines[0],
+      duration,
+      { width: 0 },
+      {
+        width: techEditorLinesWidth[0],
+        ease: easeProcess
+      }
+    );
 }
