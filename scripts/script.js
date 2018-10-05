@@ -26,20 +26,21 @@ let introActivated = false;
 //*** Technology
 const techWrapper = document.querySelector("#tech .wrapper");
 const techLineDOM = document.querySelector("#tech .animation .line");
-const techSlider = document.querySelector("#tech .slider");
+
 const techTemplate = document.querySelector("#tech-template").content;
 const techContainer = document.querySelector("#tech .slider .container");
+
 let techStartX,
   techDistance,
   techCirclesTL,
-  techSlideData,
-  techSliderInterval,
+  techSliderData,
   techContainerWidth,
   techEditorLines,
   techEditorCodeTL;
-let techSliderPos = -400;
-let techMousemove = 0;
 let techEditorLinesWidth = [];
+
+// how far compared to screen size to travel
+// mouseX, centerX, techMousemove, techSliderPos, techContainerWidth;
 
 //*** Portfolio
 
@@ -91,11 +92,6 @@ function init() {
   techDisplayData(); //call twice for smooth slider repeat
   techDisplayData(); //call twice for smooth slider repeat
 
-  //Tech mouse move for slider
-  /*techSliderInterval = setInterval(() => {
-    techSliderMouseMove();
-  }, 10);*/
-
   //Tech container width for slider repeat
   techContainerWidth = techContainer.scrollWidth;
   techContainer.style.left = -(techContainerWidth / 2) + "px"; //position slider in center
@@ -120,7 +116,6 @@ function mouseAnimations(e) {
   mouseX = e.pageX;
   mouseY = e.pageY;
   heroMouseAnimation(e);
-  techSliderMouseMove();
 }
 
 /* ==========================================================================
@@ -142,8 +137,6 @@ function sectionCheck() {
     //hero
     sectionActive = "hero";
     heroCirclesCordinates();
-
-    clearInterval(techSliderInterval);
   } else if (top > vh - repositionSooner && top <= vh * 2 - repositionSooner) {
     //intro
     sectionActive = "intro";
@@ -156,7 +149,6 @@ function sectionCheck() {
       introHeadlineWhiteBarAnimation();
       introActivated = !introActivated;
     }
-    clearInterval(techSliderInterval);
   } else if (
     top > vh * 2 - repositionSooner &&
     top <= vh * 3 - repositionSooner
@@ -164,23 +156,15 @@ function sectionCheck() {
     //tech
     sectionActive = "tech";
     techCirclesCoordinates();
-    //Tech mouse move for slider
-    /*
-    techSliderInterval = setInterval(() => {
-      techSliderMouseMove();
-    }, 10);
-    */
   } else if (
     top > vh * 3 - repositionSooner &&
     top <= vh * 4 - repositionSooner
   ) {
     //portfolio
     sectionActive = "port";
-    clearInterval(techSliderInterval);
   } else if (top > vh * 4 - repositionSooner) {
     //contact
     sectionActive = "contact";
-    clearInterval(techSliderInterval);
   }
 
   //Allow circle animation or not -> run animation only once
@@ -440,6 +424,7 @@ function techCirclesCoordinates() {
   repositionCircles(cord);
 }
 
+// Animate circles between Code Editor and Device
 function techCirclesAnimation() {
   const duration = 1.3;
 
@@ -472,7 +457,7 @@ function techCirclesAnimation() {
 }
 
 function techSetSlideData() {
-  techSlideData = [
+  techSliderData = [
     {
       title: "NodeJS",
       img: "nodejs.svg"
@@ -561,7 +546,7 @@ function techSetSlideData() {
 }
 
 function techDisplayData() {
-  techSlideData.forEach(item => {
+  techSliderData.forEach(item => {
     let clone = techTemplate.cloneNode(true);
     clone
       .querySelector("img")
@@ -570,36 +555,6 @@ function techDisplayData() {
 
     techContainer.appendChild(clone);
   });
-}
-
-function techSliderMouseMove() {
-  const buffer = 1000; // how far compared to screen size to travel
-  const delay = 0.1; // delay of smoothnes
-
-  if (!isNaN(mouseX)) {
-    //Reposition title
-    if (mouseX < centerX) {
-      //console.log("Moving left");
-      //move to the left
-      techMousemove = -Math.abs(mouseX - centerX) / buffer;
-    } else {
-      //move to the right
-      techMousemove = Math.abs(mouseX - centerX) / buffer;
-    }
-  }
-
-  techSliderPos = techSliderPos + techMousemove;
-
-  if (techSliderPos > 0) {
-    techSliderPos = -(techContainerWidth / 2);
-  } else if (techSliderPos < -(techContainerWidth / 2)) {
-    techSliderPos = 0;
-  }
-  //console.log(techSliderPos);
-  //console.log("=====");
-  //console.log(techSliderPos);
-  techContainer.style.left = techSliderPos + "px";
-  //TweenMax.to(techContainer, 0.01, { x: techSliderPos + "px" });
 }
 
 function techCodeEditorSetup() {
@@ -613,7 +568,7 @@ function techCodeEditorSetup() {
 
 function techCodeEditorAnimation() {
   const duration = 0.7;
-  const easeProcess = Power1.easeOut;
+  const easeProcess = SteppedEase.config(5);
 
   techEditorCodeTL
     .fromTo(
