@@ -43,7 +43,7 @@ main {
   z-index: -1;
   height: 30px;
   width: 30px;
-  background: #f3f3f3;
+  background: #e9e9e9;
   border-radius: 50%;
 }
 
@@ -331,7 +331,6 @@ nav {
 #tech .code-editor svg {
   width: calc(var(--tech-wrapper-width) / 3);
   max-width: 341px;
-  display: none;
 }
 #tech .code-editor svg .cls-1 {
   /* remove white lines*/
@@ -361,7 +360,6 @@ nav {
   z-index: 20;
   float: right;
   margin-top: 10px;
-  display: none;
 }
 
 /* The dot */
@@ -521,7 +519,7 @@ nav {
   margin: 0 auto;
 }
 
-#tech .slider .container {
+#tech .slider .container:last-of-type {
   height: 100px;
   white-space: nowrap;
   position: relative;
@@ -532,7 +530,8 @@ nav {
   height: 80px;
   text-align: center;
   padding: 10px 0;
-  min-width: 120px;
+  min-width: 100px;
+  margin: 0 50px;
   display: inline-block;
   white-space: normal;
 }

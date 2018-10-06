@@ -29,6 +29,7 @@ const techLineDOM = document.querySelector("#tech .animation .line");
 
 const techTemplate = document.querySelector("#tech-template").content;
 const techContainer = document.querySelector("#tech .slider .container");
+const techBox = document.querySelector("#tech .slider .box");
 
 let techStartX,
   techDistance,
@@ -36,8 +37,10 @@ let techStartX,
   techSliderData,
   techContainerWidth,
   techEditorLines,
-  techEditorCodeTL;
+  techEditorCodeTL,
+  techSliderItem;
 let techEditorLinesWidth = [];
+let techSliderActivated = false;
 
 // how far compared to screen size to travel
 // mouseX, centerX, techMousemove, techSliderPos, techContainerWidth;
@@ -94,8 +97,14 @@ function init() {
 
   //Tech container width for slider repeat
   techContainerWidth = techContainer.scrollWidth;
-  techContainer.style.left = -(techContainerWidth / 2) + "px"; //position slider in center
-  console.log(techContainerWidth);
+
+  //Get last item to calculate moveTo in slider animation
+  techSliderItem = document.querySelector(
+    "#tech .slider .container .item:last-of-type"
+  );
+
+  //Activate animation
+  techSliderAnimation();
 
   //Tech Code Editor animation setup
   techEditorLines = document.querySelectorAll(
@@ -456,107 +465,7 @@ function techCirclesAnimation() {
     );
 }
 
-function techSetSlideData() {
-  techSliderData = [
-    {
-      title: "NodeJS",
-      img: "nodejs.svg"
-    },
-    {
-      title: "After Effects",
-      img: "after-effects.svg"
-    },
-    {
-      title: "Chart.js",
-      img: "chart.js.svg"
-    },
-    {
-      title: "CSS",
-      img: "css.svg"
-    },
-    {
-      title: "Dynamic Data",
-      img: "dynamic-data.svg"
-    },
-    {
-      title: "GreenSock",
-      img: "greensock.svg"
-    },
-    {
-      title: "Hammer.JS",
-      img: "hammerjs.svg"
-    },
-    {
-      title: "HTML",
-      img: "html.svg"
-    },
-    {
-      title: "Illustrator",
-      img: "illustrator.svg"
-    },
-    {
-      title: "JPG",
-      img: "jpg.svg"
-    },
-    {
-      title: "JavaScript",
-      img: "js.svg"
-    },
-    {
-      title: "JSON",
-      img: "json.svg"
-    },
-    {
-      title: "MP4",
-      img: "mp4.svg"
-    },
-    {
-      title: "Photoshop",
-      img: "photoshop.svg"
-    },
-    {
-      title: "PNG",
-      img: "png.svg"
-    },
-    {
-      title: "Premiere Pro",
-      img: "premiere-pro.svg"
-    },
-    {
-      title: "React",
-      img: "react.svg"
-    },
-    {
-      title: "SASS",
-      img: "sass.svg"
-    },
-    {
-      title: "SEO",
-      img: "seo.svg"
-    },
-    {
-      title: "WordPress",
-      img: "wordpress.svg"
-    },
-    {
-      title: "Adobe XD",
-      img: "xd.svg"
-    }
-  ];
-}
-
-function techDisplayData() {
-  techSliderData.forEach(item => {
-    let clone = techTemplate.cloneNode(true);
-    clone
-      .querySelector("img")
-      .setAttribute("src", "assets/icons/technologies/" + item.img);
-    clone.querySelector("p").textContent = item.title;
-
-    techContainer.appendChild(clone);
-  });
-}
-
+// Add each Code Editor lines width to an array
 function techCodeEditorSetup() {
   techEditorCodeTL = new TimelineMax({ repeat: -1, repeatDelay: 1 });
   techEditorLines.forEach(line => {
@@ -566,6 +475,7 @@ function techCodeEditorSetup() {
   techEditorLinesWidth;
 }
 
+// Animate width of each line in the Code Editor from 0px to initial width
 function techCodeEditorAnimation() {
   const duration = 0.7;
   const easeProcess = SteppedEase.config(5);
@@ -670,4 +580,132 @@ function techCodeEditorAnimation() {
         ease: easeProcess
       }
     );
+}
+
+// Use this json file to populate the items in the slideshow
+function techSetSlideData() {
+  techSliderData = [
+    {
+      title: "NodeJS",
+      img: "nodejs.svg"
+    },
+    {
+      title: "After Effects",
+      img: "after-effects.svg"
+    },
+    {
+      title: "Chart.js",
+      img: "chart.js.svg"
+    },
+    {
+      title: "CSS",
+      img: "css.svg"
+    },
+    {
+      title: "Dynamic Data",
+      img: "dynamic-data.svg"
+    },
+    {
+      title: "GreenSock",
+      img: "greensock.svg"
+    },
+    {
+      title: "Hammer.JS",
+      img: "hammerjs.svg"
+    },
+    {
+      title: "HTML",
+      img: "html.svg"
+    },
+    {
+      title: "Illustrator",
+      img: "illustrator.svg"
+    },
+    {
+      title: "JPG",
+      img: "jpg.svg"
+    },
+    {
+      title: "JavaScript",
+      img: "js.svg"
+    },
+    {
+      title: "JSON",
+      img: "json.svg"
+    },
+    {
+      title: "MP4",
+      img: "mp4.svg"
+    },
+    {
+      title: "Photoshop",
+      img: "photoshop.svg"
+    },
+    {
+      title: "PNG",
+      img: "png.svg"
+    },
+    {
+      title: "Premiere Pro",
+      img: "premiere-pro.svg"
+    },
+    {
+      title: "React",
+      img: "react.svg"
+    },
+    {
+      title: "SASS",
+      img: "sass.svg"
+    },
+    {
+      title: "SEO",
+      img: "seo.svg"
+    },
+    {
+      title: "WordPress",
+      img: "wordpress.svg"
+    },
+    {
+      title: "Adobe XD",
+      img: "xd.svg"
+    }
+  ];
+}
+
+// Display the data from the previous JSON in the DOM
+function techDisplayData() {
+  techSliderData.forEach(item => {
+    let clone = techTemplate.cloneNode(true);
+    clone
+      .querySelector("img")
+      .setAttribute("src", "assets/icons/technologies/" + item.img);
+    clone.querySelector("p").textContent = item.title;
+
+    techContainer.appendChild(clone);
+  });
+}
+
+// Animate the slider by smooth infinite scrolling
+function techSliderAnimation() {
+  const duration = 30;
+  //Move to half of whole width - minues last item to prevent a "jump"
+  const moveTo =
+    -techContainerWidth / 2 - techSliderItem.getBoundingClientRect().width;
+  console.log(moveTo);
+  if (!techSliderActivated) {
+    //apply animation
+    const tm = new TweenMax.fromTo(
+      techContainer,
+      duration,
+      { left: 0, ease: Power0.easeNone },
+      {
+        left: moveTo + "px",
+        ease: Power0.easeNone,
+        repeat: -1,
+        repeatDelay: 0
+      }
+    );
+  } else {
+    //only apply once
+  }
 }
