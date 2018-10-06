@@ -331,6 +331,7 @@ nav {
 #tech .code-editor svg {
   width: calc(var(--tech-wrapper-width) / 3);
   max-width: 341px;
+  display: none;
 }
 #tech .code-editor svg .cls-1 {
   /* remove white lines*/
@@ -360,6 +361,7 @@ nav {
   z-index: 20;
   float: right;
   margin-top: 10px;
+  display: none;
 }
 
 /* The dot */

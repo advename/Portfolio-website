@@ -192,7 +192,7 @@ function repositionCircles(cord) {
     //Update each circle with their coordinates and fire gsap
 
     const duration = 1.3;
-    techCirclesTL.pause(); //pause tech-circles
+    techCirclesTL.pause(0); //pause tech-circles
     circleTL.clear(); //clear previous timeline
 
     //New timeline
