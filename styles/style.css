@@ -560,7 +560,6 @@ nav {
   right: 0;
   margin: auto;
   padding-top: 10vh;
-  overflow: hidden;
 }
 
 #port .container {
@@ -568,12 +567,15 @@ nav {
   white-space: nowrap;
   position: relative;
   left: 0;
+  display: inline-block;
 }
 
 #port .work {
   height: var(--port-wrapper-height);
   width: var(--port-wrapper-width);
   position: relative;
+  display: inline-block;
+  padding-right: 100px;
 }
 
 #port .back {

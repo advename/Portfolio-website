@@ -2,6 +2,7 @@
    General
    ========================================================================== */
 //*** Variables
+const body = document.querySelector("body");
 const circles = document.querySelectorAll(".circles"); //background circles
 let vh, vw, centerX, centerY, sectionCheckInterval, circleMaxW, circleTL;
 let sectionActive = "hero"; //on page load, hero section is the first visible one
@@ -11,6 +12,7 @@ let allowCircleAnimation = true;
 let isMobile = false; //used to define if on mobile devices or not
 let mouseX = 400;
 let mouseY = 0;
+let scrollDir;
 
 //*** Hero
 const heroTitle = document.querySelector("#hero .title");
@@ -79,6 +81,7 @@ function init() {
   sectionCheckInterval = setInterval(() => {
     sectionCheck();
   }, 100);
+  sectionCheck;
 
   // Make GSAP Timeline
   circleTL = new TimelineMax();
@@ -112,6 +115,10 @@ function init() {
   );
   techCodeEditorSetup();
   techCodeEditorAnimation();
+
+  //Eventlistener for scroll events mobile and desktop
+  window.addEventListener("wheel", scrollHandler);
+  mc.on("pan", scrollHandler);
 }
 
 function test() {
@@ -125,6 +132,16 @@ function mouseAnimations(e) {
   mouseX = e.pageX;
   mouseY = e.pageY;
   heroMouseAnimation(e);
+}
+
+function scrollHandler(e) {
+  if (e.deltaY > 0) {
+    //scrolling down
+    scrollDir = "down";
+  } else if (e.deltaY < 0) {
+    //scrolling up
+    scrollDir = "up";
+  }
 }
 
 /* ==========================================================================
@@ -709,3 +726,102 @@ function techSliderAnimation() {
     //only apply once
   }
 }
+
+/* ==========================================================================
+   Portfolio
+   ========================================================================== */
+
+function portScrollIntoPosition() {}
+
+/*
+const port = document.querySelector("#port");
+const portContainer = document.querySelector("#port .container");
+const portWrapper = document.querySelector("#port .wrapper");
+const portContainerWork = document.querySelector(
+  "#port .wrapper .work:first-of-type"
+);
+const portOffSetTop = port.offsetTop;
+let portCurrentPage = 1;
+let portData = ["item1", "item2"];
+let portWrapperWidth,
+  portHeight,
+  portScrollDirection,
+  portContainerWorkPaddingRight,
+  portContainerWidth;
+let portAllowScrollIntoPosition = true;
+let portScrollingStatus = false;
+portScrollDirection = "down";
+
+//HammerJS and enable all directions
+let mc = new Hammer(window);
+mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
+
+//init()
+//Eventlistener for scroll events mobile and desktop
+window.addEventListener("wheel", debounce(handleMouseScroll, 40));
+mc.on("pan", debounce(handleMouseScroll, 40));
+
+portWrapperWidth = portWrapper.getBoundingClientRect().width;
+portHeight = port.getBoundingClientRect().height;
+portContainerWorkPaddingRight = parseFloat(
+  window
+    .getComputedStyle(portContainerWork, null)
+    .getPropertyValue("padding-right")
+);
+
+portContainerWidth = portContainer.getBoundingClientRect().width;
+//Functions
+
+function portScrollIn(status) {
+  TweenLite.to(window, 0.3, { scrollTo: portOffSetTop });
+  body.style.overflow = "hidden";
+  portScrollingStatus = true;
+}
+
+function portScrollPages(e) {
+  console.log("scroll pages");
+  const scrollSteps = portWrapperWidth + portContainerWorkPaddingRight;
+  console.log(scrollSteps);
+  let goRight = portContainer.offsetLeft - scrollSteps + "px";
+  console.log(goRight);
+  let goLeft = portContainer.offsetLeft + scrollSteps + "px";
+
+  goRight =
+    portContainer.offsetLeft > scrollSteps - portContainerWidth
+      ? scrollSteps - portContainerWidth
+      : goRight; //never accidentally go over items
+  goLeft = portContainer.offsetLeft > -50 ? 0 : goLeft; //never accidentally go over items
+
+  if (e.deltaY > 0) {
+    //scrolling down
+    TweenMax.to(portContainer, 1, {
+      left: goRight
+    });
+    portCurrentPage++;
+  } else if (e.deltaY < 0) {
+    //scrolling up
+    TweenMax.to(portContainer, 1, {
+      left: goLeft
+    });
+    portCurrentPage--;
+  }
+}
+
+// DEBOUNCE FUNCTION credits: https://remysharp.com/2010/07/21/throttling-function-calls
+function debounce(func, wait, immediate) {
+  console.log("debounce");
+  var timeout;
+  return function() {
+    var context = this,
+      args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+}
+*/
