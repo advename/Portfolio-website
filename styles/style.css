@@ -21,6 +21,10 @@ body {
   overflow-x: hidden;
 }
 
+.overflow-hidden {
+  overflow: hidden !important;
+}
+
 main {
   position: relative;
   max-width: 1200px;
@@ -553,7 +557,7 @@ nav {
 
 #port .wrapper {
   width: var(--port-wrapper-width);
-  max-width: 100%;
+  max-width: 1200px;
   height: var(--port-wrapper-height);
   position: relative;
   left: 0;
@@ -575,7 +579,8 @@ nav {
   width: var(--port-wrapper-width);
   position: relative;
   display: inline-block;
-  padding-right: 100px;
+  margin-right: calc((100vw - var(--port-wrapper-width)) * 2);
+  max-width: 1200px;
 }
 
 #port .back {
@@ -588,6 +593,7 @@ nav {
   display: grid;
   grid-template-columns: repeat(20, 1fr);
   grid-auto-rows: 1fr; /* keeps all grid boxes same height, else remove */
+  max-width: 1200px;
 }
 
 #port .back .title {
@@ -634,6 +640,7 @@ nav {
   grid-template-columns: repeat(20, 1fr);
   grid-gap: 20px;
   grid-auto-rows: 1fr; /* keeps all grid boxes same height, else remove */
+  max-width: 1200px;
 }
 
 #port .front .image {

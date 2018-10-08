@@ -2,6 +2,7 @@
    General
    ========================================================================== */
 //*** Variables
+const html = document.querySelector("html");
 const body = document.querySelector("body");
 const circles = document.querySelectorAll(".circles"); //background circles
 let vh, vw, centerX, centerY, sectionCheckInterval, circleMaxW, circleTL;
@@ -44,9 +45,6 @@ let techStartX,
 let techEditorLinesWidth = [];
 let techSliderActivated = false;
 
-// how far compared to screen size to travel
-// mouseX, centerX, techMousemove, techSliderPos, techContainerWidth;
-
 //*** Portfolio
 
 //*** Contact
@@ -71,6 +69,12 @@ function init() {
   //Add mousemovement eventlistener
   document.addEventListener("mousemove", mouseAnimations);
   document.addEventListener("mousemove", mouseAnimations);
+
+  //Eventlistener for scroll events mobile and desktop
+  window.addEventListener("wheel", scrollHandler);
+  let mc = new Hammer(window); //HammerJS and enable all directions
+  mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
+  mc.on("pan", scrollHandler);
 
   /**For the circles animation, main window is limited to 1200px
    * So if vw is above 1200px, set it to 1200px
@@ -116,9 +120,8 @@ function init() {
   techCodeEditorSetup();
   techCodeEditorAnimation();
 
-  //Eventlistener for scroll events mobile and desktop
-  window.addEventListener("wheel", scrollHandler);
-  mc.on("pan", scrollHandler);
+  //Portfolio Setup for Slider
+  portSliderSetup();
 }
 
 function test() {
@@ -135,6 +138,7 @@ function mouseAnimations(e) {
 }
 
 function scrollHandler(e) {
+  console.log("Scrolling");
   if (e.deltaY > 0) {
     //scrolling down
     scrollDir = "down";
@@ -142,6 +146,7 @@ function scrollHandler(e) {
     //scrolling up
     scrollDir = "up";
   }
+  portSliderHandler(e);
 }
 
 /* ==========================================================================
@@ -182,15 +187,20 @@ function sectionCheck() {
     //tech
     sectionActive = "tech";
     techCirclesCoordinates();
+    portToggleAllowScroll(false);
   } else if (
     top > vh * 3 - repositionSooner &&
     top <= vh * 4 - repositionSooner
   ) {
     //portfolio
     sectionActive = "port";
+    //Allow circle animation or not -> run animation only once
+
+    portToggleScroll();
   } else if (top > vh * 4 - repositionSooner) {
     //contact
     sectionActive = "contact";
+    portToggleAllowScroll(false);
   }
 
   //Allow circle animation or not -> run animation only once
@@ -731,7 +741,143 @@ function techSliderAnimation() {
    Portfolio
    ========================================================================== */
 
-function portScrollIntoPosition() {}
+const port = document.querySelector("#port");
+const portContainer = document.querySelector("#port .container");
+const portWrapper = document.querySelector("#port .wrapper");
+const portWork = document.querySelector("#port .wrapper .work:first-of-type"); //used to get margin-right per work element
+let portOffSetTop, portWorkMarginRight, portContainerLeft;
+let portAllowScroll = false;
+let portAllowSlider = true;
+let portSliderAnimationActive = false;
+let portCurrentPage = 1;
+
+const portData = ["item1", "item2", "item3"];
+
+/* IINNIIIITT*/
+
+//Enable disable overflow (disable/enable scrolling)
+function portToggleScroll() {
+  console.log(
+    "Allow Scroll: " + portAllowScroll + " - Allow Slider: " + portAllowSlider
+  );
+  if (portAllowScroll) {
+    //enable scroll
+    body.classList.remove("overflow-hidden");
+    //portAllowSlider = false;
+  } else {
+    //disable scroll
+    body.classList.add("overflow-hidden");
+    portScrollIntoPosition();
+    portToggleAllowSlider(true);
+  }
+}
+
+//Smooth scroll into Portfolio window
+function portScrollIntoPosition() {
+  TweenLite.to(window, 0.3, {
+    scrollTo: portOffSetTop,
+    onComplete: function() {}
+  });
+}
+
+function portToggleAllowScroll(status) {
+  portAllowScroll = status;
+  //console.log("PortAllowScroll :" + portAllowScroll);
+}
+
+function portToggleAllowSlider(status) {
+  portAllowSlider = status;
+}
+
+//Initialize variables for portSliderUse
+function portSliderSetup() {
+  portOffSetTop = port.offsetTop;
+  portWorkMarginRight = parseFloat(
+    window.getComputedStyle(portWork, null).getPropertyValue("margin-right")
+  ); //get work element margin right
+
+  portContainerWidth = portContainer.getBoundingClientRect().width;
+
+  portMoveDistance = portContainerWidth / portData.length;
+
+  portContainerLeft = portContainer.offsetLeft;
+}
+
+function portSliderHandler(e) {
+  if (portAllowSlider) {
+    //allow slider to move based on scrolling
+    portSliderMove(e);
+    e.preventDefault();
+  } else {
+    //dont move slider around!
+  }
+}
+
+function portSliderMove(e) {
+  if (scrollDir === "up") {
+    //scrolling up -> go left
+
+    portSliderSlideLeft(e);
+  } else if (scrollDir === "down") {
+    //scrolling down -> go right
+
+    portSliderSlideRight();
+  }
+}
+
+//Scrolled down, go right
+function portSliderSlideRight() {
+  portContainerLeft = portContainer.offsetLeft;
+  const portLimitRight = portMoveDistance - portContainerWidth;
+  const moveTo = portContainerLeft - portMoveDistance;
+
+  //Check if next page is allowed based on max width, and if an animation is occuring
+  if (portCurrentPage < portData.length && !portSliderAnimationActive) {
+    //Still not over the limit, move one more to left
+    portSliderAnimationActive = true;
+
+    TweenMax.to(portContainer, 1, {
+      left: moveTo,
+      onComplete: function() {
+        portSliderAnimationActive = false;
+      }
+    });
+    ++portCurrentPage; // increase page number
+  } else if (portCurrentPage === portData.length) {
+    //over the limit, dont move
+    console.log("Over the limit");
+    portToggleAllowScroll(true);
+    portToggleAllowSlider(false);
+  }
+}
+
+//Scrolled down, go right
+function portSliderSlideLeft() {
+  portContainerLeft = portContainer.offsetLeft;
+  const portLimitLeft = 0;
+  const moveTo = portContainerLeft + portMoveDistance;
+
+  //Check if next page is allowed based on max width, and if an animation is occuring
+  if (portCurrentPage > 1 && !portSliderAnimationActive) {
+    //Still not over the limit, move to the right
+    portSliderAnimationActive = true;
+
+    TweenMax.to(portContainer, 1, {
+      left: moveTo,
+      onComplete: function() {
+        portSliderAnimationActive = false;
+      }
+    });
+    --portCurrentPage; //decrease current page number
+  } else if (portCurrentPage === 1) {
+    //over the limit, dont move
+    console.log("Over the limit");
+    portToggleAllowScroll(true);
+    portToggleAllowSlider(false);
+  }
+}
+
+//Scrolled up, go left
 
 /*
 const port = document.querySelector("#port");
@@ -806,10 +952,10 @@ function portScrollPages(e) {
     portCurrentPage--;
   }
 }
+*/
 
 // DEBOUNCE FUNCTION credits: https://remysharp.com/2010/07/21/throttling-function-calls
 function debounce(func, wait, immediate) {
-  console.log("debounce");
   var timeout;
   return function() {
     var context = this,
@@ -824,4 +970,3 @@ function debounce(func, wait, immediate) {
     if (callNow) func.apply(context, args);
   };
 }
-*/
