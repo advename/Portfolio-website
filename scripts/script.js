@@ -187,7 +187,10 @@ function sectionCheck() {
     //tech
     sectionActive = "tech";
     techCirclesCoordinates();
+    portScrollIntoPositionUsed = false;
     portToggleAllowScroll(false);
+    portContainer.style.left = "0px";
+    portCurrentPage = 1;
   } else if (
     top > vh * 3 - repositionSooner &&
     top <= vh * 4 - repositionSooner
@@ -200,7 +203,10 @@ function sectionCheck() {
   } else if (top > vh * 4 - repositionSooner) {
     //contact
     sectionActive = "contact";
+    portScrollIntoPositionUsed = false;
     portToggleAllowScroll(false);
+    portContainer.style.left = portMoveDistance - portContainerWidth + "px";
+    portCurrentPage = portData.length;
   }
 
   //Allow circle animation or not -> run animation only once
@@ -210,6 +216,7 @@ function sectionCheck() {
     allowCircleAnimation = true;
     previousSection = sectionActive;
   }
+  console.log(sectionActive);
 }
 
 //Reposition Circles in px
@@ -747,8 +754,9 @@ const portWrapper = document.querySelector("#port .wrapper");
 const portWork = document.querySelector("#port .wrapper .work:first-of-type"); //used to get margin-right per work element
 let portOffSetTop, portWorkMarginRight, portContainerLeft;
 let portAllowScroll = false;
-let portAllowSlider = true;
+let portAllowSlider = false;
 let portSliderAnimationActive = false;
+let portScrollIntoPositionUsed = true;
 let portCurrentPage = 1;
 
 const portData = ["item1", "item2", "item3"];
@@ -757,27 +765,32 @@ const portData = ["item1", "item2", "item3"];
 
 //Enable disable overflow (disable/enable scrolling)
 function portToggleScroll() {
-  console.log(
-    "Allow Scroll: " + portAllowScroll + " - Allow Slider: " + portAllowSlider
-  );
+  //console.log("Allow Scroll: " + portAllowScroll + " - Allow Slider: " + portAllowSlider);
   if (portAllowScroll) {
     //enable scroll
+    html.classList.remove("overflow-hidden");
     body.classList.remove("overflow-hidden");
     //portAllowSlider = false;
   } else {
     //disable scroll
+    html.classList.add("overflow-hidden");
     body.classList.add("overflow-hidden");
     portScrollIntoPosition();
-    portToggleAllowSlider(true);
+    setTimeout(() => {
+      portToggleAllowSlider(true);
+    }, 500);
   }
 }
-
 //Smooth scroll into Portfolio window
 function portScrollIntoPosition() {
-  TweenLite.to(window, 0.3, {
-    scrollTo: portOffSetTop,
-    onComplete: function() {}
-  });
+  if (!portScrollIntoPositionUsed) {
+    console.log("Useedd");
+    portScrollIntoPositionUsed = true;
+    TweenLite.to(window, 0.7, {
+      scrollTo: portOffSetTop,
+      onComplete: function() {}
+    });
+  }
 }
 
 function portToggleAllowScroll(status) {
@@ -791,6 +804,8 @@ function portToggleAllowSlider(status) {
 
 //Initialize variables for portSliderUse
 function portSliderSetup() {
+  portContainer.style.left = "0px";
+
   portOffSetTop = port.offsetTop;
   portWorkMarginRight = parseFloat(
     window.getComputedStyle(portWork, null).getPropertyValue("margin-right")
@@ -807,7 +822,6 @@ function portSliderHandler(e) {
   if (portAllowSlider) {
     //allow slider to move based on scrolling
     portSliderMove(e);
-    e.preventDefault();
   } else {
     //dont move slider around!
   }
@@ -846,8 +860,10 @@ function portSliderSlideRight() {
   } else if (portCurrentPage === portData.length) {
     //over the limit, dont move
     console.log("Over the limit");
-    portToggleAllowScroll(true);
-    portToggleAllowSlider(false);
+    setTimeout(() => {
+      portToggleAllowScroll(true);
+      portToggleAllowSlider(false);
+    }, 500);
   }
 }
 
@@ -872,8 +888,10 @@ function portSliderSlideLeft() {
   } else if (portCurrentPage === 1) {
     //over the limit, dont move
     console.log("Over the limit");
-    portToggleAllowScroll(true);
-    portToggleAllowSlider(false);
+    setTimeout(() => {
+      portToggleAllowScroll(true);
+      portToggleAllowSlider(false);
+    }, 500);
   }
 }
 

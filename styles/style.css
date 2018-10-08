@@ -712,6 +712,7 @@ nav {
   position: absolute;
   bottom: 30px;
   left: 20px;
+  z-index: 100;
 }
 
 #port .pagecount p {
