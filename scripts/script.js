@@ -59,8 +59,13 @@ function init() {
   console.log("Is it mobile/tablet: " + isMobile);
 
   //Get window height and width -> viewport height and width
-  vh = window.innerHeight;
-  vw = window.innerWidth;
+  if (isMobile) {
+    vw = window.screen.width;
+    vh = window.screen.height;
+  } else {
+    vh = window.innerHeight;
+    vw = window.innerWidth;
+  }
 
   //Get center of vh and vw
   centerX = vw / 2;
@@ -80,6 +85,9 @@ function init() {
    * So if vw is above 1200px, set it to 1200px
    */
   circleMaxW = vw < 1200 ? vw : 1200;
+
+  console.log(vh);
+  console.log(vw);
 
   //Check each 500ms which section is currently displayed
   sectionCheckInterval = setInterval(() => {
@@ -216,6 +224,7 @@ function sectionCheck() {
     allowCircleAnimation = true;
     previousSection = sectionActive;
   }
+
   console.log(sectionActive);
 }
 
