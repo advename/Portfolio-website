@@ -50,8 +50,14 @@ let techSliderActivated = false;
 const port = document.querySelector("#port");
 const portContainer = document.querySelector("#port .container");
 const portWrapper = document.querySelector("#port .wrapper");
-const portWork = document.querySelector("#port .wrapper .work:first-of-type"); //used to get margin-right per work element
-let portOffSetTop, portWorkMarginRight, portContainerLeft, portData;
+const portTemplate = document.querySelector("#port-template").content;
+const portPageCountCurrent = document.querySelector(
+  "#port .pagecount .current"
+);
+const portPageCountOutOf = document.querySelector("#port .pagecount .out-of");
+const portScrollbar = document.querySelector("#port .scrollbar");
+
+let portOffSetTop, portWorkMarginRight, portContainerLeft, portData, portWork;
 let portAllowScroll = true;
 let portAllowSlider = false;
 let portSliderAnimationActive = false;
@@ -142,8 +148,8 @@ function init() {
   //Port Data setup for template
   portDataSetup();
 
-  //Portfolio Setup for Slider
-  portSliderSetup();
+  //Display work from data and template
+  portDisplayWork();
 
   //Finally apply secton
   smoothScrollTo();
@@ -174,7 +180,7 @@ function smoothScrollTo(e) {
     if (!smoothScrollToInUse) {
       smoothScrollToInUse = true;
       sectionsHandler();
-      TweenLite.to(window, 0.3, {
+      TweenLite.to(window, 0.7, {
         scrollTo: scrollTo,
         onComplete: function() {
           smoothScrollToInUse = false;
@@ -263,7 +269,7 @@ function repositionCircles(cord) {
 
   //Run animation only once for each section change
   //Update each circle with their coordinates and fire gsap
-  const duration = 0.7;
+  const duration = 1.3;
   techCirclesTL.pause(0); //pause tech-circles
   circleTL.clear(); //clear previous timeline
 
@@ -312,7 +318,7 @@ function repositionCircles(cord) {
         height: cord[3].size,
         onComplete: function() {
           //If tech section, add another TimeLine for line-bar
-          if (sectionActive === "tech") {
+          if (sectionActive === 2) {
             techCirclesAnimation();
             techCirclesTL.play();
           }
@@ -775,11 +781,6 @@ function techSliderAnimation() {
    Portfolio
    ========================================================================== */
 
-// initialize data to be used for portfolio
-function portDataSetup() {
-  portData = ["item1", "item2", "item3"];
-}
-
 //Update circles position to portfolio
 function portCirclesCoordinates() {
   // x and y are percentage og main element -> max 1200px width and height 100vh
@@ -808,6 +809,56 @@ function portCirclesCoordinates() {
   repositionCircles(cord);
 }
 
+// initialize data to be used for portfolio
+function portDataSetup() {
+  portData = [
+    {
+      title: "Amélie Niel",
+      underTitle: "French Artist",
+      img: "amelie-niel.png",
+      desc:
+        "Redesign and implementation of a webshop for a girl who loves handcraft.",
+      linkDesc: "Website",
+      linkURL: "\\#"
+    },
+    {
+      title: "Jessica Niel",
+      underTitle: "French Artist",
+      img: "amelie-niel.png",
+      desc:
+        "Redesign and implementation of a webshop for a girl who loves handcraft.",
+      linkDesc: "Website",
+      linkURL: "\\#"
+    }
+  ];
+}
+
+function portDisplayWork() {
+  portData.forEach(work => {
+    let clone = portTemplate.cloneNode(true);
+
+    clone.querySelector(".title h2").textContent = work.title;
+    clone.querySelector(".title p").textContent = work.underTitle;
+    clone
+      .querySelector(".image img")
+      .setAttribute("src", "assets/img/portfolio/" + work.img);
+    clone.querySelector(".description p").textContent = work.desc;
+
+    if (!work.linkURL == "") {
+      clone.querySelector(".call-to-action a").textContent = work.linkDesc;
+      clone
+        .querySelector(".call-to-action a")
+        .setAttribute("href", work.linkURL);
+    } else {
+      clone.querySelector(".call-to-action a").style.display = "none";
+    }
+
+    portContainer.appendChild(clone);
+  });
+
+  portSliderSetup();
+}
+
 //Enable disable scrolling in order to keep portfolio position
 function portToggleAllowScroll(status) {
   portAllowScroll = status;
@@ -820,6 +871,7 @@ function portToggleAllowSlider(status) {
 
 //Initialize variables for portSliderUse
 function portSliderSetup() {
+  portWork = document.querySelector("#port .wrapper .work:first-of-type");
   portContainer.style.left = "0px";
 
   portOffSetTop = port.offsetTop;
@@ -832,6 +884,8 @@ function portSliderSetup() {
   portMoveDistance = portContainerWidth / portData.length;
 
   portContainerLeft = portContainer.offsetLeft;
+
+  portPageCountOutOf.textContent = portData.length + "";
 }
 
 //Handler to direct between right or left scroll
@@ -866,6 +920,8 @@ function portSliderSlideRight() {
       }
     });
     portCurrentPage++; // increase page number
+    portUpdatePage();
+    portUpdateScrollbar();
   } else if (portCurrentPage === portData.length) {
     //over the limit, dont move
     portToggleAllowScroll(true);
@@ -891,12 +947,24 @@ function portSliderSlideLeft() {
       }
     });
     --portCurrentPage; //decrease current page number
+    portUpdatePage();
+    portUpdateScrollbar();
   } else if (portCurrentPage === 1) {
     //over the limit, dont move
     console.log("Over the limit");
     portToggleAllowScroll(true);
     portToggleAllowSlider(false);
   }
+}
+
+function portUpdatePage() {
+  portPageCountCurrent.textContent = portCurrentPage + "";
+}
+
+function portUpdateScrollbar() {
+  const barWidth = (portCurrentPage / portData.length) * 100 + "vw";
+  console.log(barWidth);
+  portScrollbar.style.width = barWidth;
 }
 
 /* ==========================================================================
