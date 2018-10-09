@@ -2,7 +2,7 @@
    General
    ========================================================================== */
 html {
-  overflow-x: hidden;
+  overflow: hidden;
 }
 :root {
   /* HERO */
@@ -20,7 +20,7 @@ body {
   position: relative;
   background: #202020;
   color: #e3e3e3;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .overflow-hidden {

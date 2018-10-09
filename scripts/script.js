@@ -5,15 +5,16 @@
 const html = document.querySelector("html");
 const body = document.querySelector("body");
 const circles = document.querySelectorAll(".circles"); //background circles
-let vh, vw, centerX, centerY, sectionCheckInterval, circleMaxW, circleTL;
-let sectionActive = "hero"; //on page load, hero section is the first visible one
-let previousSection = "hero";
-let additioner = 0;
+let vh, vw, centerX, centerY, circleMaxW, circleTL;
+let sectionActive = 0; //on page load, hero section is the first visible one
 let allowCircleAnimation = true;
 let isMobile = false; //used to define if on mobile devices or not
-let mouseX = 400;
+let mouseX = 0;
 let mouseY = 0;
 let scrollDir;
+let smoothScrollToInUse = false;
+let scrollTo = 0;
+const sections = ["hero", "intro", "tech", "port", "contact"];
 
 //*** Hero
 const heroTitle = document.querySelector("#hero .title");
@@ -46,6 +47,15 @@ let techEditorLinesWidth = [];
 let techSliderActivated = false;
 
 //*** Portfolio
+const port = document.querySelector("#port");
+const portContainer = document.querySelector("#port .container");
+const portWrapper = document.querySelector("#port .wrapper");
+const portWork = document.querySelector("#port .wrapper .work:first-of-type"); //used to get margin-right per work element
+let portOffSetTop, portWorkMarginRight, portContainerLeft, portData;
+let portAllowScroll = true;
+let portAllowSlider = false;
+let portSliderAnimationActive = false;
+let portCurrentPage = 1;
 
 //*** Contact
 
@@ -74,7 +84,7 @@ function init() {
   centerX = vw / 2;
   centerY = vh / 2;
 
-  //Add mousemovement eventlistener
+  //Add mousemovement eventlistener for Hero
   document.addEventListener("mousemove", mouseAnimations);
   document.addEventListener("mousemove", mouseAnimations);
 
@@ -92,11 +102,10 @@ function init() {
   console.log(vh);
   console.log(vw);
 
-  //Check each 500ms which section is currently displayed
-  sectionCheckInterval = setInterval(() => {
-    sectionCheck();
-  }, 100);
-  sectionCheck;
+  //Get the latest active sessions on page reload
+  if (sessionStorage.getItem("sectionActive")) {
+    sectionActive = sessionStorage.getItem("sectionActive");
+  }
 
   // Make GSAP Timeline
   circleTL = new TimelineMax();
@@ -106,7 +115,6 @@ function init() {
   introHeadline = introHeadlineDOM.getBoundingClientRect();
 
   //Place circles in hero section
-  heroCirclesCordinates();
 
   //Populate Tech data and display
   techSetSlideData();
@@ -131,14 +139,14 @@ function init() {
   techCodeEditorSetup();
   techCodeEditorAnimation();
 
+  //Port Data setup for template
+  portDataSetup();
+
   //Portfolio Setup for Slider
   portSliderSetup();
-}
 
-function test() {
-  test2 = () => {
-    console.log("hello");
-  };
+  //Finally apply secton
+  smoothScrollTo();
 }
 
 // Mouse movement handler
@@ -157,156 +165,163 @@ function scrollHandler(e) {
     //scrolling up
     scrollDir = "up";
   }
-  portSliderHandler(e);
+
+  smoothScrollTo(e);
+}
+
+function smoothScrollTo(e) {
+  if (portAllowScroll) {
+    if (!smoothScrollToInUse) {
+      smoothScrollToInUse = true;
+      sectionsHandler();
+      TweenLite.to(window, 0.3, {
+        scrollTo: scrollTo,
+        onComplete: function() {
+          smoothScrollToInUse = false;
+          if (sectionActive === 3) {
+            portAllowScroll = false;
+          }
+        }
+      });
+    }
+  } else {
+    portSliderMove(e);
+  }
 }
 
 /* ==========================================================================
    Section check and circles repositioning
    ========================================================================== */
 
-//Check based on scrolling which section is currently active and apply relative functions
-function sectionCheck() {
-  const buffer = 70; // In percentage, reposition earlier related of screen height
-  const repositionSooner = (buffer / 100) * vh; //in px, do it earlier
+function sectionsHandler() {
+  // Save data to sessionStorage
 
-  //Scrollposition from top
-  const top =
-    (window.pageYOffset || document.documentElement.scrollTop) -
-    (document.documentElement.clientTop || 0);
-
-  //Check current position
-  if (top <= vh - repositionSooner) {
-    //hero
-    sectionActive = "hero";
-    heroCirclesCordinates();
-  } else if (top > vh - repositionSooner && top <= vh * 2 - repositionSooner) {
-    //intro
-    sectionActive = "intro";
-    introCirclesCordinates();
-
-    //Run these only once
-    if (!introActivated) {
-      console.log(introHeadline);
-      introHeadlineWhiteBarPosition();
-      introHeadlineWhiteBarAnimation();
-      introActivated = !introActivated;
+  if (scrollDir === "up") {
+    if (sectionActive > 0) {
+      --sectionActive;
     }
-  } else if (
-    top > vh * 2 - repositionSooner &&
-    top <= vh * 3 - repositionSooner
-  ) {
-    //tech
-    sectionActive = "tech";
-    techCirclesCoordinates();
-    portScrollIntoPositionUsed = false;
-    portToggleAllowScroll(false);
-    portContainer.style.left = "0px";
-    portCurrentPage = 1;
-  } else if (
-    top > vh * 3 - repositionSooner &&
-    top <= vh * 4 - repositionSooner
-  ) {
-    //portfolio
-    sectionActive = "port";
-    //Allow circle animation or not -> run animation only once
-
-    portToggleScroll();
-  } else if (top > vh * 4 - repositionSooner) {
-    //contact
-    sectionActive = "contact";
-    portScrollIntoPositionUsed = false;
-    portToggleAllowScroll(false);
-    portContainer.style.left = portMoveDistance - portContainerWidth + "px";
-    portCurrentPage = portData.length;
+  } else if (scrollDir === "down") {
+    if (sectionActive < sections.length - 1) {
+      ++sectionActive;
+    }
   }
 
-  //Allow circle animation or not -> run animation only once
-  if (previousSection === sectionActive) {
-    allowCircleAnimation = false;
-  } else {
-    allowCircleAnimation = true;
-    previousSection = sectionActive;
-  }
+  sessionStorage.setItem("sectionActive", sectionActive);
 
   console.log(sectionActive);
+
+  let runF = {
+    0: function() {
+      //hero
+      scrollTo = 0;
+      heroCirclesCordinates();
+    },
+    1: function() {
+      //intro
+      scrollTo = sectionActive * vh;
+      introCirclesCordinates();
+      //Run these only once
+      if (!introActivated) {
+        console.log(introHeadline);
+        introHeadlineWhiteBarPosition();
+        introHeadlineWhiteBarAnimation();
+        introActivated = !introActivated;
+      }
+    },
+    2: function() {
+      //tech
+      scrollTo = sectionActive * vh;
+
+      //tech
+      techCirclesCoordinates();
+      portContainer.style.left = "0px";
+      portCurrentPage = 1;
+    },
+    3: function() {
+      scrollTo = sectionActive * vh;
+      portCirclesCoordinates();
+      //port
+    },
+    4: function() {
+      scrollTo = sectionActive * vh;
+      contactCirclesCoordinates();
+      //contact
+      portContainer.style.left = portMoveDistance - portContainerWidth + "px";
+      portCurrentPage = portData.length;
+    }
+  };
+
+  runF[sectionActive]();
 }
+
+//Check based on scrolling which section is currently active and apply relative functions
+function sectionCheck() {}
 
 //Reposition Circles in px
 function repositionCircles(cord) {
   //Set additioner based on active section (vh * additioner)
-  additioner = {
-    hero: 0,
-    intro: 1,
-    tech: 2,
-    port: 3,
-    contact: 4
-  }[sectionActive];
 
   //Run animation only once for each section change
-  if (allowCircleAnimation === true) {
-    //Update each circle with their coordinates and fire gsap
+  //Update each circle with their coordinates and fire gsap
+  const duration = 0.7;
+  techCirclesTL.pause(0); //pause tech-circles
+  circleTL.clear(); //clear previous timeline
 
-    const duration = 1.3;
-    techCirclesTL.pause(0); //pause tech-circles
-    circleTL.clear(); //clear previous timeline
-
-    //New timeline
-    circleTL
-      .to(
-        circles[0],
-        duration,
-        {
-          left: cord[0].x,
-          top: cord[0].y,
-          width: cord[0].size,
-          height: cord[0].size
-        },
-        0
-      )
-      .to(
-        circles[1],
-        duration,
-        {
-          left: cord[1].x,
-          top: cord[1].y,
-          width: cord[1].size,
-          height: cord[1].size
-        },
-        0
-      )
-      .to(
-        circles[2],
-        duration,
-        {
-          left: cord[2].x,
-          top: cord[2].y,
-          width: cord[2].size,
-          height: cord[2].size
-        },
-        0
-      )
-      .to(
-        circles[3],
-        duration,
-        {
-          left: cord[3].x,
-          top: cord[3].y,
-          width: cord[3].size,
-          height: cord[3].size,
-          onComplete: function() {
-            //If tech section, add another TimeLine for line-bar
-            if (sectionActive === "tech") {
-              techCirclesAnimation();
-              techCirclesTL.play();
-            }
+  //New timeline
+  circleTL
+    .to(
+      circles[0],
+      duration,
+      {
+        left: cord[0].x,
+        top: cord[0].y,
+        width: cord[0].size,
+        height: cord[0].size
+      },
+      0
+    )
+    .to(
+      circles[1],
+      duration,
+      {
+        left: cord[1].x,
+        top: cord[1].y,
+        width: cord[1].size,
+        height: cord[1].size
+      },
+      0
+    )
+    .to(
+      circles[2],
+      duration,
+      {
+        left: cord[2].x,
+        top: cord[2].y,
+        width: cord[2].size,
+        height: cord[2].size
+      },
+      0
+    )
+    .to(
+      circles[3],
+      duration,
+      {
+        left: cord[3].x,
+        top: cord[3].y,
+        width: cord[3].size,
+        height: cord[3].size,
+        onComplete: function() {
+          //If tech section, add another TimeLine for line-bar
+          if (sectionActive === "tech") {
+            techCirclesAnimation();
+            techCirclesTL.play();
           }
-        },
-        0
-      );
+        }
+      },
+      0
+    );
 
-    allowCircleAnimation = false;
-    console.log("Run circle animation");
-  }
+  console.log("Run circle animation");
 }
 
 //Calculate x for circles
@@ -317,7 +332,7 @@ function calcX(x) {
 
 //Calculate y for circles
 function calcY(y) {
-  let temp = (y / 100) * vh + vh * additioner;
+  let temp = (y / 100) * vh + vh * sectionActive;
   return temp + "px";
 }
 
@@ -760,56 +775,45 @@ function techSliderAnimation() {
    Portfolio
    ========================================================================== */
 
-const port = document.querySelector("#port");
-const portContainer = document.querySelector("#port .container");
-const portWrapper = document.querySelector("#port .wrapper");
-const portWork = document.querySelector("#port .wrapper .work:first-of-type"); //used to get margin-right per work element
-let portOffSetTop, portWorkMarginRight, portContainerLeft;
-let portAllowScroll = false;
-let portAllowSlider = false;
-let portSliderAnimationActive = false;
-let portScrollIntoPositionUsed = true;
-let portCurrentPage = 1;
-
-const portData = ["item1", "item2", "item3"];
-
-/* IINNIIIITT*/
-
-//Enable disable overflow (disable/enable scrolling)
-function portToggleScroll() {
-  //console.log("Allow Scroll: " + portAllowScroll + " - Allow Slider: " + portAllowSlider);
-  if (portAllowScroll) {
-    //enable scroll
-    html.classList.remove("overflow-hidden");
-    body.classList.remove("overflow-hidden");
-    //portAllowSlider = false;
-  } else {
-    //disable scroll
-    html.classList.add("overflow-hidden");
-    body.classList.add("overflow-hidden");
-    portScrollIntoPosition();
-    setTimeout(() => {
-      portToggleAllowSlider(true);
-    }, 500);
-  }
-}
-//Smooth scroll into Portfolio window
-function portScrollIntoPosition() {
-  if (!portScrollIntoPositionUsed) {
-    console.log("Useedd");
-    portScrollIntoPositionUsed = true;
-    TweenLite.to(window, 0.7, {
-      scrollTo: portOffSetTop,
-      onComplete: function() {}
-    });
-  }
+// initialize data to be used for portfolio
+function portDataSetup() {
+  portData = ["item1", "item2", "item3"];
 }
 
+//Update circles position to portfolio
+function portCirclesCoordinates() {
+  // x and y are percentage og main element -> max 1200px width and height 100vh
+  const cord = [
+    {
+      size: size(10),
+      x: calcX(50),
+      y: calcY(10)
+    },
+    {
+      size: size(10),
+      x: calcX(80),
+      y: calcY(80)
+    },
+    {
+      size: size(10),
+      x: calcX(30),
+      y: calcY(70)
+    },
+    {
+      size: size(23),
+      x: calcX(10),
+      y: calcY(30)
+    }
+  ];
+  repositionCircles(cord);
+}
+
+//Enable disable scrolling in order to keep portfolio position
 function portToggleAllowScroll(status) {
   portAllowScroll = status;
-  //console.log("PortAllowScroll :" + portAllowScroll);
 }
 
+//Enable disable slider in order to keep portfolio position
 function portToggleAllowSlider(status) {
   portAllowSlider = status;
 }
@@ -830,15 +834,7 @@ function portSliderSetup() {
   portContainerLeft = portContainer.offsetLeft;
 }
 
-function portSliderHandler(e) {
-  if (portAllowSlider) {
-    //allow slider to move based on scrolling
-    portSliderMove(e);
-  } else {
-    //dont move slider around!
-  }
-}
-
+//Handler to direct between right or left scroll
 function portSliderMove(e) {
   if (scrollDir === "up") {
     //scrolling up -> go left
@@ -856,8 +852,9 @@ function portSliderSlideRight() {
   portContainerLeft = portContainer.offsetLeft;
   const portLimitRight = portMoveDistance - portContainerWidth;
   const moveTo = portContainerLeft - portMoveDistance;
+  console.log("Port info:" + portCurrentPage + " - " + portData.length);
 
-  //Check if next page is allowed based on max width, and if an animation is occuring
+  //Check if next page is allowed based on page and if an animation is occuring
   if (portCurrentPage < portData.length && !portSliderAnimationActive) {
     //Still not over the limit, move one more to left
     portSliderAnimationActive = true;
@@ -868,24 +865,21 @@ function portSliderSlideRight() {
         portSliderAnimationActive = false;
       }
     });
-    ++portCurrentPage; // increase page number
+    portCurrentPage++; // increase page number
   } else if (portCurrentPage === portData.length) {
     //over the limit, dont move
-    console.log("Over the limit");
-    setTimeout(() => {
-      portToggleAllowScroll(true);
-      portToggleAllowSlider(false);
-    }, 500);
+    portToggleAllowScroll(true);
+    portToggleAllowSlider(false);
   }
 }
 
-//Scrolled down, go right
+//Scrolled down, go left
 function portSliderSlideLeft() {
   portContainerLeft = portContainer.offsetLeft;
   const portLimitLeft = 0;
   const moveTo = portContainerLeft + portMoveDistance;
 
-  //Check if next page is allowed based on max width, and if an animation is occuring
+  //Check if next page is allowed based on page and if an animation is occuring
   if (portCurrentPage > 1 && !portSliderAnimationActive) {
     //Still not over the limit, move to the right
     portSliderAnimationActive = true;
@@ -900,103 +894,39 @@ function portSliderSlideLeft() {
   } else if (portCurrentPage === 1) {
     //over the limit, dont move
     console.log("Over the limit");
-    setTimeout(() => {
-      portToggleAllowScroll(true);
-      portToggleAllowSlider(false);
-    }, 500);
+    portToggleAllowScroll(true);
+    portToggleAllowSlider(false);
   }
 }
 
-//Scrolled up, go left
+/* ==========================================================================
+   Contact
+   ========================================================================== */
 
-/*
-const port = document.querySelector("#port");
-const portContainer = document.querySelector("#port .container");
-const portWrapper = document.querySelector("#port .wrapper");
-const portContainerWork = document.querySelector(
-  "#port .wrapper .work:first-of-type"
-);
-const portOffSetTop = port.offsetTop;
-let portCurrentPage = 1;
-let portData = ["item1", "item2"];
-let portWrapperWidth,
-  portHeight,
-  portScrollDirection,
-  portContainerWorkPaddingRight,
-  portContainerWidth;
-let portAllowScrollIntoPosition = true;
-let portScrollingStatus = false;
-portScrollDirection = "down";
-
-//HammerJS and enable all directions
-let mc = new Hammer(window);
-mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
-
-//init()
-//Eventlistener for scroll events mobile and desktop
-window.addEventListener("wheel", debounce(handleMouseScroll, 40));
-mc.on("pan", debounce(handleMouseScroll, 40));
-
-portWrapperWidth = portWrapper.getBoundingClientRect().width;
-portHeight = port.getBoundingClientRect().height;
-portContainerWorkPaddingRight = parseFloat(
-  window
-    .getComputedStyle(portContainerWork, null)
-    .getPropertyValue("padding-right")
-);
-
-portContainerWidth = portContainer.getBoundingClientRect().width;
-//Functions
-
-function portScrollIn(status) {
-  TweenLite.to(window, 0.3, { scrollTo: portOffSetTop });
-  body.style.overflow = "hidden";
-  portScrollingStatus = true;
-}
-
-function portScrollPages(e) {
-  console.log("scroll pages");
-  const scrollSteps = portWrapperWidth + portContainerWorkPaddingRight;
-  console.log(scrollSteps);
-  let goRight = portContainer.offsetLeft - scrollSteps + "px";
-  console.log(goRight);
-  let goLeft = portContainer.offsetLeft + scrollSteps + "px";
-
-  goRight =
-    portContainer.offsetLeft > scrollSteps - portContainerWidth
-      ? scrollSteps - portContainerWidth
-      : goRight; //never accidentally go over items
-  goLeft = portContainer.offsetLeft > -50 ? 0 : goLeft; //never accidentally go over items
-
-  if (e.deltaY > 0) {
-    //scrolling down
-    TweenMax.to(portContainer, 1, {
-      left: goRight
-    });
-    portCurrentPage++;
-  } else if (e.deltaY < 0) {
-    //scrolling up
-    TweenMax.to(portContainer, 1, {
-      left: goLeft
-    });
-    portCurrentPage--;
-  }
-}
-*/
-
-// DEBOUNCE FUNCTION credits: https://remysharp.com/2010/07/21/throttling-function-calls
-function debounce(func, wait, immediate) {
-  var timeout;
-  return function() {
-    var context = this,
-      args = arguments;
-    var later = function() {
-      timeout = null;
-      if (!immediate) func.apply(context, args);
-    };
-    var callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
-  };
+//Update circles position to portfolio
+function contactCirclesCoordinates() {
+  // x and y are percentage og main element -> max 1200px width and height 100vh
+  const cord = [
+    {
+      size: size(10),
+      x: calcX(20),
+      y: calcY(40)
+    },
+    {
+      size: size(40),
+      x: calcX(10),
+      y: calcY(70)
+    },
+    {
+      size: size(10),
+      x: calcX(30),
+      y: calcY(10)
+    },
+    {
+      size: size(23),
+      x: calcX(90),
+      y: calcY(30)
+    }
+  ];
+  repositionCircles(cord);
 }
