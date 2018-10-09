@@ -41,7 +41,7 @@ main {
   position: relative;
   width: 100vw;
   max-width: 100%;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 .circles {
@@ -743,6 +743,59 @@ nav {
 }
 
 /* ==========================================================================
+   Contact
+   ========================================================================== */
+
+:root {
+  /* HERO */
+  --intro-wrapper-height: 90vmin;
+  --intro-wrapper-width: 100vw;
+}
+#contact {
+  height: 100vh;
+  max-height: 100vh;
+}
+
+#contact .wrapper {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  column-gap: 10px;
+  width: var(--intro-wrapper-width);
+  max-width: 1200px;
+  height: var(--intro-wrapper-height);
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#contact .wrapper > div {
+  position: relative;
+  grid-column: span 4;
+  height: calc(var(--intro-wrapper-height) / 2);
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ff001e21;
+  height: 100%;
+  width: 100%;
+}
+
+#contact .white-splitter {
+  width: 150vw;
+  height: 150vh;
+  background: #e3e3e3;
+  position: absolute;
+  top: 0;
+  left: 40vw;
+  z-index: -10;
+  transform-origin: center;
+}
+/* ==========================================================================
    Media Queries
    ========================================================================== */
 /* Small devices (landscape phones, 576px and up) */
@@ -756,4 +809,13 @@ nav {
 }
 /* Extra large devices (large desktops, 1200px and up) */
 @media (max-width: 1200px) {
+}
+
+#teest {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3000;
+  background: red;
+  display: none;
 }

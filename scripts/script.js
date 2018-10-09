@@ -4,6 +4,7 @@
 //*** Variables
 const html = document.querySelector("html");
 const body = document.querySelector("body");
+const parents = document.querySelectorAll(".parent");
 const circles = document.querySelectorAll(".circles"); //background circles
 let vh, vw, centerX, centerY, circleMaxW, circleTL;
 let sectionActive = 0; //on page load, hero section is the first visible one
@@ -61,22 +62,30 @@ let portOffSetTop, portWorkMarginRight, portContainerLeft, portData, portWork;
 let portAllowScroll = true;
 let portAllowSlider = false;
 let portSliderAnimationActive = false;
-let portCurrentPage = 1;
+let portCurrentPage = 0;
 
 //*** Contact
+const contactWhiteSplitter = document.querySelector("#contact .white-splitter");
 
 /* ==========================================================================
    Initilaize
    ========================================================================== */
-document.addEventListener("DOMContentLoaded", () => setTimeout(init, 10));
+document.addEventListener("DOMContentLoaded", () => setTimeout(init, 1));
 function init() {
+  //Always start from top
+  window.scrollTo(0, 0);
+
   //Check if mobile or tablet (tablet landscape is 1024px)
   isMobile = window.matchMedia("(max-width: 992px)").matches ? true : false;
+  if (isMobile) setupMobile();
   console.log("Is it mobile/tablet: " + isMobile);
 
   //Get window height and width -> viewport height and width
   vh = window.innerHeight;
   vw = window.innerWidth;
+
+  document.querySelector("#teest").style.width = vw + "px";
+  document.querySelector("#teest").style.height = vh + "px";
   /*
   if (isMobile) {
     vw = window.screen.width;
@@ -96,9 +105,9 @@ function init() {
 
   //Eventlistener for scroll events mobile and desktop
   window.addEventListener("wheel", scrollHandler);
-  let mc = new Hammer(window); //HammerJS and enable all directions
+  let mc = new Hammer(window, { treshold: 1000 }); //HammerJS and enable all directions
   mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
-  mc.on("pan", scrollHandler);
+  mc.on("panend panup pandown", scrollHandler);
 
   /**For the circles animation, main window is limited to 1200px
    * So if vw is above 1200px, set it to 1200px
@@ -110,7 +119,7 @@ function init() {
 
   //Get the latest active sessions on page reload
   if (sessionStorage.getItem("sectionActive")) {
-    sectionActive = sessionStorage.getItem("sectionActive");
+    //sectionActive = sessionStorage.getItem("sectionActive");
   }
 
   // Make GSAP Timeline
@@ -152,7 +161,9 @@ function init() {
   portDisplayWork();
 
   //Finally apply secton
+  smoothScrollToInUse = false;
   smoothScrollTo();
+  reset();
 }
 
 // Mouse movement handler
@@ -163,19 +174,38 @@ function mouseAnimations(e) {
 }
 
 function scrollHandler(e) {
-  console.log("Scrolling");
-  if (e.deltaY > 0) {
-    //scrolling down
-    scrollDir = "down";
-  } else if (e.deltaY < 0) {
-    //scrolling up
-    scrollDir = "up";
-  }
+  console.log(e);
 
+  if (isMobile) {
+    //Handle mobile scrolling
+    if (e.deltaY < 0) {
+      //scrolling down
+      scrollDir = "down";
+    } else if (e.deltaY > 0) {
+      //scrolling up
+      scrollDir = "up";
+    }
+  } else if (e.type == "wheel" || !isMobile) {
+    //Handle Desktop scrolling
+    if (e.deltaY > 0) {
+      //scrolling down
+      scrollDir = "down";
+    } else if (e.deltaY < 0) {
+      //scrolling up
+      scrollDir = "up";
+    }
+  }
   smoothScrollTo(e);
 }
 
+function reset() {
+  portAllowScroll = true;
+  smoothScrollToInUse = false;
+}
+
 function smoothScrollTo(e) {
+  console.log(portAllowScroll);
+  console.log(smoothScrollToInUse);
   if (portAllowScroll) {
     if (!smoothScrollToInUse) {
       smoothScrollToInUse = true;
@@ -183,6 +213,7 @@ function smoothScrollTo(e) {
       TweenLite.to(window, 0.7, {
         scrollTo: scrollTo,
         onComplete: function() {
+          console.log("TTThis fired");
           smoothScrollToInUse = false;
           if (sectionActive === 3) {
             portAllowScroll = false;
@@ -195,13 +226,30 @@ function smoothScrollTo(e) {
   }
 }
 
+function setupMobile() {
+  //First section shorter
+  parents[0].style.height = window.innerHeight + "px";
+  parents[0].style.marginBottom =
+    window.screen.height - window.innerHeight + "px";
+
+  /*    parents.forEach(parent => {
+    parent.style.height = window.innerHeight + "px";
+    parent.style.marginBottom =
+      window.screen.height - window.innerHeight + "px";
+  });*/
+}
+
+function getOffsetTop(el) {
+  const rect = el.getBoundingClientRect();
+  return rect.top + window.scrollY;
+}
+
 /* ==========================================================================
    Section check and circles repositioning
    ========================================================================== */
 
 function sectionsHandler() {
   // Save data to sessionStorage
-
   if (scrollDir === "up") {
     if (sectionActive > 0) {
       --sectionActive;
@@ -214,7 +262,7 @@ function sectionsHandler() {
 
   sessionStorage.setItem("sectionActive", sectionActive);
 
-  console.log(sectionActive);
+  //console.log(sectionActive);
 
   let runF = {
     0: function() {
@@ -224,7 +272,7 @@ function sectionsHandler() {
     },
     1: function() {
       //intro
-      scrollTo = sectionActive * vh;
+      scrollTo = getOffsetTop(parents[sectionActive]);
       introCirclesCordinates();
       //Run these only once
       if (!introActivated) {
@@ -236,28 +284,30 @@ function sectionsHandler() {
     },
     2: function() {
       //tech
-      scrollTo = sectionActive * vh;
-
-      //tech
+      scrollTo = getOffsetTop(parents[sectionActive]);
       techCirclesCoordinates();
       portContainer.style.left = "0px";
       portCurrentPage = 1;
     },
     3: function() {
-      scrollTo = sectionActive * vh;
-      portCirclesCoordinates();
       //port
+      scrollTo = getOffsetTop(parents[sectionActive]);
+      portCirclesCoordinates();
+      contactAnimateWhiteSplitter(false);
     },
     4: function() {
-      scrollTo = sectionActive * vh;
-      contactCirclesCoordinates();
       //contact
+      scrollTo = getOffsetTop(parents[sectionActive]);
+      contactCirclesCoordinates();
+
       portContainer.style.left = portMoveDistance - portContainerWidth + "px";
       portCurrentPage = portData.length;
+      contactAnimateWhiteSplitter(true);
     }
   };
 
   runF[sectionActive]();
+  smoothScrollTo();
 }
 
 //Check based on scrolling which section is currently active and apply relative functions
@@ -316,6 +366,7 @@ function repositionCircles(cord) {
         top: cord[3].y,
         width: cord[3].size,
         height: cord[3].size,
+        background: cord[3].color,
         onComplete: function() {
           //If tech section, add another TimeLine for line-bar
           if (sectionActive === 2) {
@@ -326,8 +377,6 @@ function repositionCircles(cord) {
       },
       0
     );
-
-  console.log("Run circle animation");
 }
 
 //Calculate x for circles
@@ -389,7 +438,8 @@ function heroCirclesCordinates() {
     {
       size: size(55),
       x: calcX(30),
-      y: calcY(70)
+      y: calcY(70),
+      color: "#e3e3e3"
     }
   ];
   repositionCircles(cord);
@@ -420,7 +470,8 @@ function introCirclesCordinates() {
     {
       size: size(25),
       x: calcX(90),
-      y: calcY(30)
+      y: calcY(30),
+      color: "#e3e3e3"
     }
   ];
 
@@ -494,7 +545,8 @@ function techCirclesCoordinates() {
     {
       size: circleSize,
       x: startX,
-      y: posY
+      y: posY,
+      color: "#e3e3e3"
     }
   ];
   repositionCircles(cord);
@@ -803,7 +855,8 @@ function portCirclesCoordinates() {
     {
       size: size(23),
       x: calcX(10),
-      y: calcY(30)
+      y: calcY(30),
+      color: "#e3e3e3"
     }
   ];
   repositionCircles(cord);
@@ -924,8 +977,10 @@ function portSliderSlideRight() {
     portUpdateScrollbar();
   } else if (portCurrentPage === portData.length) {
     //over the limit, dont move
-    portToggleAllowScroll(true);
-    portToggleAllowSlider(false);
+    setTimeout(() => {
+      portToggleAllowScroll(true);
+      portToggleAllowSlider(false);
+    }, 400);
   }
 }
 
@@ -952,8 +1007,10 @@ function portSliderSlideLeft() {
   } else if (portCurrentPage === 1) {
     //over the limit, dont move
     console.log("Over the limit");
-    portToggleAllowScroll(true);
-    portToggleAllowSlider(false);
+    setTimeout(() => {
+      portToggleAllowScroll(true);
+      portToggleAllowSlider(false);
+    }, 1000);
   }
 }
 
@@ -962,7 +1019,12 @@ function portUpdatePage() {
 }
 
 function portUpdateScrollbar() {
-  const barWidth = (portCurrentPage / portData.length) * 100 + "vw";
+  let barWidth;
+  if (vw < 1200) {
+    barWidth = (portCurrentPage / portData.length) * 100 + "vw";
+  } else {
+    barWidth = (portCurrentPage / portData.length) * 1200 + "px";
+  }
   console.log(barWidth);
   portScrollbar.style.width = barWidth;
 }
@@ -993,8 +1055,22 @@ function contactCirclesCoordinates() {
     {
       size: size(23),
       x: calcX(90),
-      y: calcY(30)
+      y: calcY(30),
+      color: "#202020"
     }
   ];
   repositionCircles(cord);
+}
+
+//Rotate the white bar on scroll up scroll down
+function contactAnimateWhiteSplitter(status) {
+  if (status) {
+    TweenLite.to(contactWhiteSplitter, 0.7, {
+      transform: "rotate(10deg)"
+    });
+  } else {
+    TweenLite.to(contactWhiteSplitter, 0.7, {
+      transform: "rotate(0deg)"
+    });
+  }
 }
