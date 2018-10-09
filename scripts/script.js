@@ -59,6 +59,9 @@ function init() {
   console.log("Is it mobile/tablet: " + isMobile);
 
   //Get window height and width -> viewport height and width
+  vh = window.innerHeight;
+  vw = window.innerWidth;
+  /*
   if (isMobile) {
     vw = window.screen.width;
     vh = window.screen.height;
@@ -66,7 +69,7 @@ function init() {
     vh = window.innerHeight;
     vw = window.innerWidth;
   }
-
+*/
   //Get center of vh and vw
   centerX = vw / 2;
   centerY = vh / 2;
