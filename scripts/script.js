@@ -6,6 +6,7 @@ const html = document.querySelector("html");
 const body = document.querySelector("body");
 const parents = document.querySelectorAll(".parent");
 const circles = document.querySelectorAll(".circles"); //background circles
+let circleDefColor = "#e3e3e3";
 let vh, vw, centerX, centerY, circleMaxW, circleTL;
 let sectionActive = 0; //on page load, hero section is the first visible one
 let allowCircleAnimation = true;
@@ -62,7 +63,7 @@ let portOffSetTop, portWorkMarginRight, portContainerLeft, portData, portWork;
 let portAllowScroll = true;
 let portAllowSlider = false;
 let portSliderAnimationActive = false;
-let portCurrentPage = 0;
+let portCurrentPage = 1;
 
 //*** Contact
 const contactWhiteSplitter = document.querySelector("#contact .white-splitter");
@@ -70,7 +71,7 @@ const contactWhiteSplitter = document.querySelector("#contact .white-splitter");
 /* ==========================================================================
    Initilaize
    ========================================================================== */
-document.addEventListener("DOMContentLoaded", () => setTimeout(init, 1));
+document.addEventListener("DOMContentLoaded", () => setTimeout(init, 100));
 function init() {
   //Always start from top
   window.scrollTo(0, 0);
@@ -84,8 +85,6 @@ function init() {
   vh = window.innerHeight;
   vw = window.innerWidth;
 
-  document.querySelector("#teest").style.width = vw + "px";
-  document.querySelector("#teest").style.height = vh + "px";
   /*
   if (isMobile) {
     vw = window.screen.width;
@@ -164,6 +163,8 @@ function init() {
   smoothScrollToInUse = false;
   smoothScrollTo();
   reset();
+  heroCirclesCordinates();
+  portUpdateScrollbar();
 }
 
 // Mouse movement handler
@@ -174,8 +175,6 @@ function mouseAnimations(e) {
 }
 
 function scrollHandler(e) {
-  console.log(e);
-
   if (isMobile) {
     //Handle mobile scrolling
     if (e.deltaY < 0) {
@@ -204,8 +203,6 @@ function reset() {
 }
 
 function smoothScrollTo(e) {
-  console.log(portAllowScroll);
-  console.log(smoothScrollToInUse);
   if (portAllowScroll) {
     if (!smoothScrollToInUse) {
       smoothScrollToInUse = true;
@@ -213,7 +210,6 @@ function smoothScrollTo(e) {
       TweenLite.to(window, 0.7, {
         scrollTo: scrollTo,
         onComplete: function() {
-          console.log("TTThis fired");
           smoothScrollToInUse = false;
           if (sectionActive === 3) {
             portAllowScroll = false;
@@ -276,7 +272,6 @@ function sectionsHandler() {
       introCirclesCordinates();
       //Run these only once
       if (!introActivated) {
-        console.log(introHeadline);
         introHeadlineWhiteBarPosition();
         introHeadlineWhiteBarAnimation();
         introActivated = !introActivated;
@@ -307,6 +302,13 @@ function sectionsHandler() {
   };
 
   runF[sectionActive]();
+  if (sectionActive != 4) {
+    if (isMobile) circleDefColor = "rgba(227, 227, 227, 0.3);";
+    else if (!isMobile) circleDefColor = "#e3e3e3";
+  }
+  if (sectionActive === 1) {
+    circleDefColor = "#e3e3e3";
+  }
   smoothScrollTo();
 }
 
@@ -332,7 +334,8 @@ function repositionCircles(cord) {
         left: cord[0].x,
         top: cord[0].y,
         width: cord[0].size,
-        height: cord[0].size
+        height: cord[0].size,
+        background: circleDefColor
       },
       0
     )
@@ -343,7 +346,8 @@ function repositionCircles(cord) {
         left: cord[1].x,
         top: cord[1].y,
         width: cord[1].size,
-        height: cord[1].size
+        height: cord[1].size,
+        background: circleDefColor
       },
       0
     )
@@ -354,7 +358,8 @@ function repositionCircles(cord) {
         left: cord[2].x,
         top: cord[2].y,
         width: cord[2].size,
-        height: cord[2].size
+        height: cord[2].size,
+        background: circleDefColor
       },
       0
     )
@@ -366,7 +371,7 @@ function repositionCircles(cord) {
         top: cord[3].y,
         width: cord[3].size,
         height: cord[3].size,
-        background: cord[3].color,
+        background: circleDefColor,
         onComplete: function() {
           //If tech section, add another TimeLine for line-bar
           if (sectionActive === 2) {
@@ -470,8 +475,7 @@ function introCirclesCordinates() {
     {
       size: size(25),
       x: calcX(90),
-      y: calcY(30),
-      color: "#e3e3e3"
+      y: calcY(30)
     }
   ];
 
@@ -488,8 +492,12 @@ function introHeadlineWhiteBarPosition() {
   const height = fontSize * 4;
 
   //Set position from top
-  let posX = introHeadline.height - (height / 2 + introWrapper.offsetTop);
+  let posX = introHeadline.height - height / 2;
   introWhiteBar.style.top = posX + "px";
+  console.log(introHeadline.height);
+  console.log(height);
+  console.log(introWrapper.offsetTop);
+  console.log(posX);
 
   //Set height
   introWhiteBar.style.height = height + "px";
@@ -524,7 +532,7 @@ function techCirclesCoordinates() {
   techStartX = startX;
   let stopX = techLine.right + "px";
   let distance = techLine.right - techLine.left - 10;
-  techDistance = distance > 720 ? "690px" : distance + "px"; //distance
+  techDistance = distance > 720 ? "680px" : distance + "px"; //distance
 
   const cord = [
     {
@@ -545,8 +553,7 @@ function techCirclesCoordinates() {
     {
       size: circleSize,
       x: startX,
-      y: posY,
-      color: "#e3e3e3"
+      y: posY
     }
   ];
   repositionCircles(cord);
@@ -810,7 +817,6 @@ function techSliderAnimation() {
   //Move to half of whole width - minues last item to prevent a "jump"
   const moveTo =
     -techContainerWidth / 2 - techSliderItem.getBoundingClientRect().width;
-  console.log(moveTo);
   if (!techSliderActivated) {
     //apply animation
     const tm = new TweenMax.fromTo(
@@ -855,8 +861,7 @@ function portCirclesCoordinates() {
     {
       size: size(23),
       x: calcX(10),
-      y: calcY(30),
-      color: "#e3e3e3"
+      y: calcY(30)
     }
   ];
   repositionCircles(cord);
@@ -1025,7 +1030,7 @@ function portUpdateScrollbar() {
   } else {
     barWidth = (portCurrentPage / portData.length) * 1200 + "px";
   }
-  console.log(barWidth);
+
   portScrollbar.style.width = barWidth;
 }
 
@@ -1035,6 +1040,7 @@ function portUpdateScrollbar() {
 
 //Update circles position to portfolio
 function contactCirclesCoordinates() {
+  circleDefColor = "#202020";
   // x and y are percentage og main element -> max 1200px width and height 100vh
   const cord = [
     {
@@ -1043,9 +1049,9 @@ function contactCirclesCoordinates() {
       y: calcY(40)
     },
     {
-      size: size(40),
-      x: calcX(10),
-      y: calcY(70)
+      size: size(10),
+      x: calcX(30),
+      y: calcY(60)
     },
     {
       size: size(10),
@@ -1055,8 +1061,7 @@ function contactCirclesCoordinates() {
     {
       size: size(23),
       x: calcX(90),
-      y: calcY(30),
-      color: "#202020"
+      y: calcY(30)
     }
   ];
   repositionCircles(cord);

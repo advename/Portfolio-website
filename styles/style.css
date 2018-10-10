@@ -780,7 +780,6 @@ nav {
   bottom: 0;
   left: 0;
   right: 0;
-  background: #ff001e21;
   height: 100%;
   width: 100%;
 }
@@ -795,27 +794,291 @@ nav {
   z-index: -10;
   transform-origin: center;
 }
+
+#contact .left > h2 {
+  margin-top: 20px;
+  font-size: 35px;
+  margin-left: 50px;
+}
+
+#contact .left .presentations {
+  margin-top: 40px;
+  max-height: 70%;
+}
+
+#contact .presentations ul {
+  list-style-type: disc;
+  list-style-position: outside;
+  display: block;
+}
+
+#contact .presentations li {
+  display: block;
+  display: list-item;
+  margin-left: 15%;
+  margin-bottom: 30px;
+}
+
+#contact .presentations h3 {
+  font-size: 20px;
+}
+
+#contact .presentations p {
+  font-size: 16px;
+  margin-left: 50px;
+}
+
+#contact .external {
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  width: 50%;
+}
+
+#contact .external img {
+  width: 20%;
+}
+
+#contact .external a:last-of-type {
+  margin-left: 40%;
+}
+
+#contact .right {
+  color: #202020;
+  display: table;
+}
+
+#contact .right > div {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+#contact .right h2 {
+  font-size: 40px;
+  margin-top: 0px;
+  margin-bottom: 100px;
+}
+#contact .right form {
+  width: 300px;
+  margin: 0 auto;
+}
+
+#contact .right input,
+#contact .right textarea {
+  width: 300px;
+  border: none;
+  margin-top: 20px;
+  font-size: 20px;
+  background: none;
+  border-bottom: 1px solid #a2a2a2;
+  padding-bottom: 5px;
+  min-height: 20px;
+}
+
+#contact .right input::placeholder,
+#contact .right textarea::placeholder {
+  color: #a2a2a2;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 400;
+  background: none;
+}
+
+#contact .right input[type="submit"] {
+  margin-top: 100px;
+  border: 1px solid #202020;
+  padding: 5px 20px;
+  width: 140px;
+  font-size: 30px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+#contact textarea:focus,
+#contact input:focus {
+  outline: none;
+}
+
+#contact .right input[type="submit"]:hover {
+  background: #202020;
+  color: white;
+}
+
 /* ==========================================================================
    Media Queries
    ========================================================================== */
-/* Small devices (landscape phones, 576px and up) */
-@media (max-width: 576px) {
-}
-/* Medium devices (tablets, 768px and up) */
-@media (max-width: 768px) {
+/* Extra large devices (large desktops, 1200px and up) */
+@media (max-width: 1200px) {
+  #contact .white-splitter {
+    left: 50vw;
+  }
 }
 /* Large devices (desktops, 992px and up) */
 @media (max-width: 992px) {
+  #contact .white-splitter {
+    left: 45vw;
+  }
 }
-/* Extra large devices (large desktops, 1200px and up) */
-@media (max-width: 1200px) {
+/* Medium devices (tablets, 768px and down) */
+@media (max-width: 768px) {
+  .circles {
+    background: rgba(227, 227, 227, 0.3);
+  }
+  #intro .headline h2 {
+    font-size: 35px;
+  }
+  #tech .wrapper {
+    height: 70vh;
+    position: absolute;
+    padding-top: 0;
+  }
+  #tech .device {
+    margin-top: -20px;
+  }
 }
 
-#teest {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 3000;
-  background: red;
-  display: none;
+/* Small devices (landscape phones, 576px and up) */
+@media (max-width: 576px) {
+  #intro,
+  #tech,
+  #port,
+  #contact {
+    position: relative;
+    width: 100vw;
+    max-width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+  }
+
+  #hero .wrapper {
+    height: 70vh;
+    grid-template-rows: repeat(2, 1fr);
+  }
+  #hero .title {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto 0;
+    grid-column: span 8;
+    grid-row: 2;
+  }
+  #hero .title-image {
+    grid-column: span 8;
+    grid-row: 1;
+  }
+
+  #intro .wrapper {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    column-gap: 20px;
+    height: 90vh;
+  }
+  #intro .wrapper > div {
+    grid-column: span 8;
+    height: auto;
+  }
+  #intro .wrapper .headline {
+    grid-row: 1/3;
+    margin: 0 auto;
+    height: 100px;
+  }
+  #intro .headline h2 {
+    font-size: 35px;
+  }
+
+  #intro .wrapper .image {
+    margin: 0 auto;
+    height: 150px;
+    grid-row: 3/6;
+  }
+  #intro .wrapper .description {
+    margin: 0 auto;
+    height: 100px;
+    grid-row: 6/11;
+  }
+  #intro .map {
+    display: none;
+  }
+
+  #tech .code-editor {
+    padding-top: 48px;
+  }
+  #tech .device {
+    margin-top: -20px;
+    transform: scale(0.5);
+    transform-origin: right;
+  }
+  #tech .line {
+    width: 66%;
+  }
+
+  #port .back {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    max-width: 1200px;
+  }
+  #port .back .title {
+    grid-column: span 2;
+    grid-row: 1 / 2;
+    margin-left: 20px;
+  }
+  #port .back .box {
+    grid-column: span 2;
+    grid-row: 2 / 7;
+    background: black;
+  }
+  #port .front {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    max-width: 1200px;
+  }
+  #port .front .image {
+    grid-column: span 2;
+    grid-row: 2 / 3;
+  }
+  #port .front .info {
+    grid-column: span 2;
+    grid-row: 3 / 7;
+  }
+  #port .front .image > div {
+    margin-top: 50px;
+    width: 100%;
+  }
+  #port .front .image > div:after {
+    padding-top: 70%;
+  }
+  #port .front .description {
+    margin: 0;
+    white-space: pre-wrap;
+  }
+  #contact .wrapper {
+    height: 90vh;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+  }
+  #contact .wrapper > div {
+    grid-column: span 8;
+    grid-row: span 2;
+    height: auto;
+  }
+  #contact .left > h2 {
+    display: none;
+  }
+  #contact .presentations {
+    display: none;
+  }
+  #contact .white-splitter {
+    left: -15vw;
+    top: 20vh;
+  }
+  #contact .right {
+    grid-row: span 4;
+  }
+  #contact .right h2 {
+    font-size: 40px;
+    margin-top: 40px;
+    margin-bottom: 0px;
+  }
 }
