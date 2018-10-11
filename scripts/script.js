@@ -6,6 +6,9 @@ const html = document.querySelector("html");
 const body = document.querySelector("body");
 const parents = document.querySelectorAll(".parent");
 const circles = document.querySelectorAll(".circles"); //background circles
+const navBackground = document.querySelectorAll(".background");
+const burgerMenu = document.querySelector("#burger-menu");
+let burgerMenuOpen = false;
 let circleDefColor = "#e3e3e3";
 let vh, vw, centerX, centerY, circleMaxW, circleTL;
 let sectionActive = 0; //on page load, hero section is the first visible one
@@ -74,7 +77,7 @@ const contactWhiteSplitter = document.querySelector("#contact .white-splitter");
 document.addEventListener("DOMContentLoaded", () => setTimeout(init, 100));
 function init() {
   //Always start from top
-  window.scrollTo(0, 0);
+  window.scrollTo(0, 1);
 
   //Check if mobile or tablet (tablet landscape is 1024px)
   isMobile = window.matchMedia("(max-width: 992px)").matches ? true : false;
@@ -120,6 +123,8 @@ function init() {
   if (sessionStorage.getItem("sectionActive")) {
     //sectionActive = sessionStorage.getItem("sectionActive");
   }
+
+  burgerMenu.addEventListener("click", toggleBurgerMenu);
 
   // Make GSAP Timeline
   circleTL = new TimelineMax();
@@ -238,6 +243,21 @@ function setupMobile() {
 function getOffsetTop(el) {
   const rect = el.getBoundingClientRect();
   return rect.top + window.scrollY;
+}
+
+function toggleBurgerMenu() {
+  if (burgerMenuOpen) {
+    //close burger menu
+    navBackground.forEach(back => {
+      back.classList.remove("nav-animation");
+    });
+  } else {
+    //open burger menu
+    navBackground.forEach(back => {
+      back.classList.add("nav-animation");
+    });
+  }
+  burgerMenuOpen = !burgerMenuOpen;
 }
 
 /* ==========================================================================
@@ -875,18 +895,66 @@ function portDataSetup() {
       underTitle: "French Artist",
       img: "amelie-niel.png",
       desc:
-        "Redesign and implementation of a webshop for a girl who loves handcraft.",
-      linkDesc: "Website",
-      linkURL: "\\#"
+        "Amélie Niel is a french artist who loves handcrafted art. Her existing website has been redesigned and on request, a webshop has been implemented. ",
+      linkDesc1: "PROTOTYPE",
+      linkURL1: "http://stud.advena.me/sem2-2018/exam/website/index.html",
+      linkDesc2: "",
+      linkURL2: ""
     },
     {
-      title: "Jessica Niel",
-      underTitle: "French Artist",
-      img: "amelie-niel.png",
+      title: "YFU",
+      underTitle: "Intercultural Exchange Organisation",
+      img: "yfu.png",
       desc:
-        "Redesign and implementation of a webshop for a girl who loves handcraft.",
-      linkDesc: "Website",
-      linkURL: "\\#"
+        "YFU were in need of a marketing campaign to promote their service and strengthen their brand identity. This protoype website is supported by a SoMe video and a survey.",
+      linkDesc1: "prototype",
+      linkURL1: "http://stud.advena.me/sem2-2018/06.03-yfu-website/",
+      linkDesc2: "video",
+      linkURL2: "https://youtu.be/Y02a0svw4DA"
+    },
+    {
+      title: "afDahm",
+      underTitle: "Danish/Swedish clothes designer",
+      img: "afdahm.png",
+      desc:
+        "afDahm is a portfolio website of a danish/swedish clothes designer and maker, which also features a blog.",
+      linkDesc1: "Website",
+      linkURL1: "https://afdahm.com/",
+      linkDesc2: "",
+      linkURL2: ""
+    },
+    {
+      title: "Dashboard",
+      underTitle: "FooBar",
+      img: "foobar-dashboard.png",
+      desc:
+        "This is a futuristic dashboard idea for a bar manager who can easily keep track of everything by the help of sensors and motion tracker.",
+      linkDesc1: "Prototype",
+      linkURL1: "http://stud.advena.me/sem3-2018/09.04-dashboard-foobar/",
+      linkDesc2: "",
+      linkURL2: ""
+    },
+    {
+      title: "CSS Unit Game",
+      underTitle: "Learning Platform",
+      img: "css-units-game.png",
+      desc:
+        "CSS Unit Game is a website i created in my spare time. The target group is everybody who's working in the digital world (marketing, design...) to give them the ability to play around, without using developer tools.",
+      linkDesc1: "Website",
+      linkURL1: "https://repo.advena.me/css-game/",
+      linkDesc2: "",
+      linkURL2: ""
+    },
+    {
+      title: "Advena",
+      underTitle: "my homepage",
+      img: "advena.png",
+      desc:
+        "Advena.me is my homepage, where I distribute selfmade free digital tools, store my courses and share mediums and knowledge. This portfolio website aims at displaying my skills. ",
+      linkDesc1: "Website",
+      linkURL1: "https://repo.advena.me/css-game/",
+      linkDesc2: "",
+      linkURL2: ""
     }
   ];
 }
@@ -902,13 +970,26 @@ function portDisplayWork() {
       .setAttribute("src", "assets/img/portfolio/" + work.img);
     clone.querySelector(".description p").textContent = work.desc;
 
-    if (!work.linkURL == "") {
-      clone.querySelector(".call-to-action a").textContent = work.linkDesc;
+    if (!work.linkURL1 == "") {
+      clone.querySelector(".call-to-action a:nth-of-type(1)").innerHTML =
+        work.linkDesc1 + " <img src='assets/icons/new-tab-icon.svg'>";
       clone
-        .querySelector(".call-to-action a")
-        .setAttribute("href", work.linkURL);
+        .querySelector(".call-to-action a:nth-of-type(1)")
+        .setAttribute("href", work.linkURL1);
     } else {
-      clone.querySelector(".call-to-action a").style.display = "none";
+      clone.querySelector(".call-to-action a:nth-of-type(1)").style.display =
+        "none";
+    }
+
+    if (!work.linkURL2 == "") {
+      clone.querySelector(".call-to-action a:nth-of-type(2)").innerHTML =
+        work.linkDesc2 + " <img src='assets/icons/new-tab-icon.svg'>";
+      clone
+        .querySelector(".call-to-action a:nth-of-type(2)")
+        .setAttribute("href", work.linkURL2);
+    } else {
+      clone.querySelector(".call-to-action a:nth-of-type(2)").style.display =
+        "none";
     }
 
     portContainer.appendChild(clone);
