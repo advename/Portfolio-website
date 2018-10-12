@@ -13,12 +13,12 @@ const burgerMenu = document.querySelector("#burger-menu");
 let burgerMenuOpen = false;
 let circleDefColor = "#e3e3e3";
 let vh, vw, centerX, centerY, circleMaxW, circleTL;
-let sectionActive = 0; //on page load, hero section is the first visible one
+let sectionActive = -1; //on page load, hero section is the first visible one
 let allowCircleAnimation = true;
 let isMobile = false; //used to define if on mobile devices or not
 let mouseX = 0;
 let mouseY = 0;
-let scrollDir;
+let scrollDir = "down";
 let smoothScrollToInUse = false;
 let scrollTo = 0;
 const sections = ["hero", "intro", "tech", "port", "contact"];
@@ -77,8 +77,8 @@ const contactWhiteSplitter = document.querySelector("#contact .white-splitter");
    Initilaize
    ========================================================================== */
 document.addEventListener("DOMContentLoaded", () => {
-  beforeInit();
-  setTimeout(init, 100);
+  beforeInit(); //run before init
+  setTimeout(init, 100); //wait 100ms
 });
 
 function beforeInit() {
@@ -100,15 +100,6 @@ function init() {
   vh = window.innerHeight;
   vw = window.innerWidth;
 
-  /*
-  if (isMobile) {
-    vw = window.screen.width;
-    vh = window.screen.height;
-  } else {
-    vh = window.innerHeight;
-    vw = window.innerWidth;
-  }
-*/
   //Get center of vh and vw
   centerX = vw / 2;
   centerY = vh / 2;
@@ -118,10 +109,10 @@ function init() {
   document.addEventListener("mousemove", mouseAnimations);
 
   //Eventlistener for scroll events mobile and desktop
-  window.addEventListener("wheel", scrollHandler);
+  window.addEventListener("wheel", debounce(scrollHandler, 100, true));
   let mc = new Hammer(window, { treshold: 1000 }); //HammerJS and enable all directions
   mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
-  mc.on("panend panup pandown", scrollHandler);
+  mc.on("panend panup pandown", debounce(scrollHandler, 100, true));
 
   /**For the circles animation, main window is limited to 1200px
    * So if vw is above 1200px, set it to 1200px
@@ -131,21 +122,14 @@ function init() {
   console.log(vh);
   console.log(vw);
 
-  //Get the latest active sessions on page reload
-  if (sessionStorage.getItem("sectionActive")) {
-    //sectionActive = sessionStorage.getItem("sectionActive");
-  }
-
   burgerMenu.addEventListener("click", toggleBurgerMenu);
 
   // Make GSAP Timeline
-  circleTL = new TimelineMax();
-  techCirclesTL = new TimelineMax({ repeat: -1, repeatDelay: 0 });
+  circleTL = new TimelineMax(); //Circle background pages
+  techCirclesTL = new TimelineMax({ repeat: -1, repeatDelay: 0 }); //Circle tech sections between code editor and device
 
   //Set intro Headline position from top
   introHeadline = introHeadlineDOM.getBoundingClientRect();
-
-  //Place circles in hero section
 
   //Populate Tech data and display
   techSetSlideData();
@@ -176,12 +160,16 @@ function init() {
   //Display work from data and template
   portDisplayWork();
 
-  //Finally apply secton
-  smoothScrollToInUse = false;
-  smoothScrollTo();
-  reset();
-  heroCirclesCordinates();
+  //Update Scrollbar pages
   portUpdateScrollbar();
+
+  //Finally apply secton
+  setTimeout(() => {
+    sectionsHandler();
+    heroCirclesCordinates();
+  }, 300);
+
+  //reset();
 }
 
 // Mouse movement handler
@@ -211,7 +199,7 @@ function scrollHandler(e) {
       scrollDir = "up";
     }
   }
-  smoothScrollTo(e);
+  sectionsHandler();
 }
 
 function reset() {
@@ -221,20 +209,22 @@ function reset() {
 
 function smoothScrollTo(e) {
   if (portAllowScroll) {
-    if (!smoothScrollToInUse) {
-      smoothScrollToInUse = true;
-      sectionsHandler();
-      TweenLite.to(window, 0.7, {
-        scrollTo: scrollTo,
-        onComplete: function() {
-          smoothScrollToInUse = false;
-          if (sectionActive === 3) {
-            portAllowScroll = false;
-          }
+    smoothScrollToInUse = true;
+
+    TweenMax.to(window, 0.7, {
+      scrollTo: scrollTo,
+      onStart: function() {
+        console.log(sectionActive);
+      },
+      onComplete: function() {
+        smoothScrollToInUse = false;
+        if (sectionActive === 3) {
+          portAllowScroll = false;
         }
-      });
-    }
+      }
+    });
   } else {
+    console.log("this goas also");
     portSliderMove(e);
   }
 }
@@ -294,10 +284,6 @@ function sectionsHandler() {
     }
   }
 
-  sessionStorage.setItem("sectionActive", sectionActive);
-
-  //console.log(sectionActive);
-
   let runF = {
     0: function() {
       //hero
@@ -319,8 +305,8 @@ function sectionsHandler() {
       //tech
       scrollTo = getOffsetTop(parents[sectionActive]);
       techCirclesCoordinates();
-      portContainer.style.left = "0px";
-      portCurrentPage = 1;
+      //portContainer.style.left = "0px";
+      //portCurrentPage = 1;
     },
     3: function() {
       //port
@@ -333,8 +319,8 @@ function sectionsHandler() {
       scrollTo = getOffsetTop(parents[sectionActive]);
       contactCirclesCoordinates();
 
-      portContainer.style.left = portMoveDistance - portContainerWidth + "px";
-      portCurrentPage = portData.length;
+      //portContainer.style.left = portMoveDistance - portContainerWidth + "px";
+      //portCurrentPage = portData.length;
       contactAnimateWhiteSplitter(true);
     }
   };
@@ -532,10 +518,6 @@ function introHeadlineWhiteBarPosition() {
   //Set position from top
   let posX = introHeadline.height - height / 2;
   introWhiteBar.style.top = posX + "px";
-  console.log(introHeadline.height);
-  console.log(height);
-  console.log(introWrapper.offsetTop);
-  console.log(posX);
 
   //Set height
   introWhiteBar.style.height = height + "px";
@@ -1051,10 +1033,11 @@ function portSliderMove(e) {
     //scrolling up -> go left
 
     portSliderSlideLeft(e);
+    console.log("Wassuup");
   } else if (scrollDir === "down") {
     //scrolling down -> go right
 
-    portSliderSlideRight();
+    portSliderSlideRight(e);
   }
 }
 
@@ -1063,15 +1046,18 @@ function portSliderSlideRight() {
   portContainerLeft = portContainer.offsetLeft;
   const portLimitRight = portMoveDistance - portContainerWidth;
   const moveTo = portContainerLeft - portMoveDistance;
+  console.log("Port info:" + portContainerLeft + " - " + portMoveDistance);
   console.log("Port info:" + portCurrentPage + " - " + portData.length);
 
   //Check if next page is allowed based on page and if an animation is occuring
   if (portCurrentPage < portData.length && !portSliderAnimationActive) {
     //Still not over the limit, move one more to left
-    portSliderAnimationActive = true;
 
-    TweenMax.to(portContainer, 1, {
+    TweenMax.to(portContainer, 0.7, {
       left: moveTo,
+      onStart: function() {
+        portSliderAnimationActive = true;
+      },
       onComplete: function() {
         portSliderAnimationActive = false;
       }
@@ -1097,10 +1083,11 @@ function portSliderSlideLeft() {
   //Check if next page is allowed based on page and if an animation is occuring
   if (portCurrentPage > 1 && !portSliderAnimationActive) {
     //Still not over the limit, move to the right
-    portSliderAnimationActive = true;
-
-    TweenMax.to(portContainer, 1, {
+    TweenMax.to(portContainer, 0.7, {
       left: moveTo,
+      onStart: function() {
+        portSliderAnimationActive = true;
+      },
       onComplete: function() {
         portSliderAnimationActive = false;
       }
@@ -1177,4 +1164,54 @@ function contactAnimateWhiteSplitter(status) {
       transform: "rotate(0deg)"
     });
   }
+}
+
+// DEBOUNCE FUNCTION
+function debounce(func, wait, immediate) {
+  console.log("debounce");
+  var timeout;
+  return function() {
+    var context = this,
+      args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+}
+
+function throttle(func, wait, options) {
+  var context, args, result;
+  var timeout = null;
+  var previous = 0;
+  if (!options) options = {};
+  var later = function() {
+    previous = options.leading === false ? 0 : Date.now();
+    timeout = null;
+    result = func.apply(context, args);
+    if (!timeout) context = args = null;
+  };
+  return function() {
+    var now = Date.now();
+    if (!previous && options.leading === false) previous = now;
+    var remaining = wait - (now - previous);
+    context = this;
+    args = arguments;
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+      previous = now;
+      result = func.apply(context, args);
+      if (!timeout) context = args = null;
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining);
+    }
+    return result;
+  };
 }
