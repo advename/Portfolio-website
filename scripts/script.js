@@ -6,7 +6,9 @@ const html = document.querySelector("html");
 const body = document.querySelector("body");
 const parents = document.querySelectorAll(".parent");
 const circles = document.querySelectorAll(".circles"); //background circles
-const navBackground = document.querySelectorAll(".background");
+const svgToBeInjected = document.querySelectorAll(".inject-svg");
+const navBackground = document.querySelectorAll("nav .background");
+const navLIS = document.querySelectorAll("nav ul li");
 const burgerMenu = document.querySelector("#burger-menu");
 let burgerMenuOpen = false;
 let circleDefColor = "#e3e3e3";
@@ -74,7 +76,17 @@ const contactWhiteSplitter = document.querySelector("#contact .white-splitter");
 /* ==========================================================================
    Initilaize
    ========================================================================== */
-document.addEventListener("DOMContentLoaded", () => setTimeout(init, 100));
+document.addEventListener("DOMContentLoaded", () => {
+  beforeInit();
+  setTimeout(init, 100);
+});
+
+function beforeInit() {
+  svgToBeInjected.forEach(svg => {
+    SVGInject(svg);
+  });
+}
+
 function init() {
   //Always start from top
   window.scrollTo(0, 1);
@@ -251,10 +263,16 @@ function toggleBurgerMenu() {
     navBackground.forEach(back => {
       back.classList.remove("nav-animation");
     });
+    navLIS.forEach(li => {
+      li.classList.remove("nav-animation");
+    });
   } else {
     //open burger menu
     navBackground.forEach(back => {
       back.classList.add("nav-animation");
+    });
+    navLIS.forEach(li => {
+      li.classList.add("nav-animation");
     });
   }
   burgerMenuOpen = !burgerMenuOpen;
