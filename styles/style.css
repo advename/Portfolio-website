@@ -4,10 +4,6 @@
 html {
   overflow: hidden;
 }
-:root {
-  /* HERO */
-  /*--hero-wrapper-width: 70vw;*/
-}
 
 body {
   margin: 0;
@@ -90,49 +86,48 @@ main {
   display: block;
 }
 
-nav .background{
+nav .background {
   position: fixed;
   top: 0;
   width: 100vw;
   height: calc(100vh / 5 + 1px);
   background: #202020;
-  transition: left .3s;
+  transition: left 0.3s;
   z-index: 140;
 }
 
-nav .background:nth-of-type(2){
+nav .background:nth-of-type(2) {
   top: calc((100vh / 5) * 1);
 }
-nav .background:nth-of-type(3){
+nav .background:nth-of-type(3) {
   top: calc((100vh / 5) * 2);
 }
-nav .background:nth-of-type(4){
+nav .background:nth-of-type(4) {
   top: calc((100vh / 5) * 3);
 }
-nav .background:nth-of-type(5){
+nav .background:nth-of-type(5) {
   top: calc((100vh / 5) * 4);
 }
 
-nav .background:nth-of-type(odd){
+nav .background:nth-of-type(odd) {
   left: -101vw;
-  
 }
-nav .background:nth-of-type(even){
-  left: 101vw
+nav .background:nth-of-type(even) {
+  left: 101vw;
 }
 
-nav > .back .background.nav-animation{
+nav > .back .background.nav-animation {
   left: 0;
 }
-nav > .front li.nav-animation{
+nav > .front li.nav-animation {
   left: 0;
 }
 
-
-nav ul{
+nav ul {
   text-align: center;
+  font-size: 50px;
 }
-nav li{
+nav li {
   width: 100vw;
   left: 0px;
   text-transform: uppercase;
@@ -140,39 +135,37 @@ nav li{
   top: 0px;
   padding-top: 50px;
   height: calc(100vh / 5 + 1px - 50px);
-  transition: all .3s ;
+  transition: all 0.3s;
   cursor: pointer;
   z-index: 145;
 }
-nav li.active{
+nav li.active {
   color: #202020;
   background: #e3e3e3;
 }
-nav li:hover{
+nav li:hover {
   color: #202020;
   background: #e3e3e3;
 }
 
+nav li:nth-of-type(2) {
+  top: calc((100vh / 5) * 1);
+}
+nav li:nth-of-type(3) {
+  top: calc((100vh / 5) * 2);
+}
+nav li:nth-of-type(4) {
+  top: calc((100vh / 5) * 3);
+}
+nav li:nth-of-type(5) {
+  top: calc((100vh / 5) * 4);
+}
 
-nav li:nth-of-type(2){
-  top: calc((100vh / 5) * 1 );
-}
-nav li:nth-of-type(3){
-  top: calc((100vh / 5) * 2 );
-}
-nav li:nth-of-type(4){
-  top: calc((100vh / 5) * 3 );
-}
-nav li:nth-of-type(5){
-  top: calc((100vh / 5) * 4 );
-}
-
-nav li:nth-of-type(odd){
+nav li:nth-of-type(odd) {
   left: -101vw;
-  
 }
-nav li:nth-of-type(even){
-  left: 101vw
+nav li:nth-of-type(even) {
+  left: 101vw;
 }
 
 /* ==========================================================================
@@ -328,6 +321,7 @@ nav li:nth-of-type(even){
 }
 
 #intro .headline {
+  position: relative;
   display: table;
   text-align: center;
 }
@@ -474,8 +468,6 @@ nav li:nth-of-type(even){
   border-radius: 5px;
 
   background-color: #1e3f57;
-
-  transform-type: preserve-3d;
 
   animation: dot1 5s cubic-bezier(0.55, 0.3, 0.24, 0.99) infinite;
 }
@@ -778,9 +770,7 @@ nav li:nth-of-type(even){
 }
 
 #port .front .description p {
-
-    line-height: 20px;
-}
+  line-height: 20px;
 }
 
 #port .front .call-to-action {
@@ -832,7 +822,7 @@ nav li:nth-of-type(even){
   left: 0;
   height: 10px;
   width: 200px;
-  background: #b454ff;
+  background: rgba(255, 77, 111);
   transition: width 0.3s;
 }
 
@@ -998,6 +988,15 @@ nav li:nth-of-type(even){
   color: white;
 }
 
+#contact footer {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #979797;
+}
+
 /* ==========================================================================
    Media Queries
    ========================================================================== */
@@ -1026,8 +1025,6 @@ nav li:nth-of-type(even){
     position: absolute;
     padding-top: 0;
   }
-  #tech .device {
-  }
 }
 
 /* Small devices (landscape phones, 576px and up) */
@@ -1043,10 +1040,8 @@ nav li:nth-of-type(even){
     min-height: 100vh;
   }
   nav ul {
-
     font-size: 35px;
-
-}
+  }
 
   #hero .wrapper {
     height: 70vh;
@@ -1082,7 +1077,7 @@ nav li:nth-of-type(even){
     height: 100px;
   }
   #intro .headline h2 {
-    font-size: 35px;
+    font-size: 30px;
   }
 
   #intro .wrapper .image {
@@ -1099,8 +1094,6 @@ nav li:nth-of-type(even){
     display: none;
   }
 
-  #tech .code-editor {
-  }
   #tech .device {
     transform: scale(0.5);
     right: -50px;
@@ -1124,7 +1117,7 @@ nav li:nth-of-type(even){
   }
 
   #port .back .title h2 {
-    font-size:25px;
+    font-size: 25px;
   }
   #port .back .title p {
     font-size: 12px;
@@ -1155,6 +1148,9 @@ nav li:nth-of-type(even){
   #port .front .image > div:after {
     padding-top: 50%;
   }
+  #port .front .call-to-action {
+    bottom: auto;
+  }
   #port .front .description {
     margin: 0;
     white-space: pre-wrap;
@@ -1164,11 +1160,10 @@ nav li:nth-of-type(even){
     white-space: pre-wrap;
   }
 
-  #port .front .call-to-action{
+  #port .front .call-to-action {
     grid-column: span 2;
     grid-row: 3 / 5;
   }
-  
 
   #port .front .call-to-action a {
     display: block;
@@ -1179,7 +1174,7 @@ nav li:nth-of-type(even){
 
   #port .pagecount p {
     font-size: 16px;
-}
+  }
 
   #contact .wrapper {
     height: 90vh;

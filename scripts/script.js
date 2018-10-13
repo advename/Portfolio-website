@@ -8,6 +8,7 @@ const parents = document.querySelectorAll(".parent");
 const circles = document.querySelectorAll(".circles"); //background circles
 const svgToBeInjected = document.querySelectorAll(".inject-svg");
 const navBackground = document.querySelectorAll("nav .background");
+const navUL = document.querySelector("nav .front ul");
 const navLIS = document.querySelectorAll("nav ul li");
 const burgerMenu = document.querySelector("#burger-menu");
 let burgerMenuOpen = false;
@@ -72,6 +73,7 @@ let portCurrentPage = 1;
 
 //*** Contact
 const contactWhiteSplitter = document.querySelector("#contact .white-splitter");
+const contactFooterSpan = document.querySelector("#contact footer span");
 
 /* ==========================================================================
    Initilaize
@@ -122,7 +124,11 @@ function init() {
   console.log(vh);
   console.log(vw);
 
+  //Open close burger menu
   burgerMenu.addEventListener("click", toggleBurgerMenu);
+
+  //Navigation click handler
+  navUL.addEventListener("click", navigatePage);
 
   // Make GSAP Timeline
   circleTL = new TimelineMax(); //Circle background pages
@@ -163,13 +169,14 @@ function init() {
   //Update Scrollbar pages
   portUpdateScrollbar();
 
+  //Update to current year in footer
+  contactFooterSetCurrentYear();
+
   //Finally apply secton
   setTimeout(() => {
     sectionsHandler();
     heroCirclesCordinates();
   }, 300);
-
-  //reset();
 }
 
 // Mouse movement handler
@@ -234,12 +241,23 @@ function setupMobile() {
   parents[0].style.height = window.innerHeight + "px";
   parents[0].style.marginBottom =
     window.screen.height - window.innerHeight + "px";
+}
 
-  /*    parents.forEach(parent => {
-    parent.style.height = window.innerHeight + "px";
-    parent.style.marginBottom =
-      window.screen.height - window.innerHeight + "px";
-  });*/
+function navigatePage(e) {
+  scrollDir = "down";
+  sectionActive = e.target.dataset.page - 1; //trick sectionshandler
+  liAddActiveClass(e.target.dataset.page);
+  portToggleAllowScroll(true);
+  portToggleAllowSlider(false);
+  sectionsHandler();
+  toggleBurgerMenu();
+}
+
+function liAddActiveClass(numb) {
+  navLIS.forEach(li => {
+    li.classList.remove("active");
+  });
+  navLIS[numb].classList.add("active");
 }
 
 function getOffsetTop(el) {
@@ -326,6 +344,7 @@ function sectionsHandler() {
   };
 
   runF[sectionActive]();
+  liAddActiveClass(sectionActive);
   if (sectionActive != 4) {
     if (isMobile) circleDefColor = "rgba(227, 227, 227, 0.3);";
     else if (!isMobile) circleDefColor = "#e3e3e3";
@@ -512,11 +531,21 @@ function introHeadlineWhiteBarPosition() {
     window
       .getComputedStyle(introHeadlineDOM, null)
       .getPropertyValue("font-size")
-  ); //Credits: https://stackoverflow.com/a/15195345
+  );
+  const paddingTop = window
+    .getComputedStyle(introHeadlineDOM, null)
+    .getPropertyValue("padding-top");
   const height = fontSize * 4;
-
-  //Set position from top
-  let posX = introHeadline.height - height / 2;
+  let posX;
+  console.log(introHeadlineDOM.offsetTop);
+  if (isMobile) {
+    //Set position from top on mobile devices
+    posX = introHeadline.height - height / 2;
+  } else {
+    //Set position from top on desktop devices
+    posX = introHeadline.height / 2 - introWrapper.offsetTop;
+  }
+  console.log(introHeadline);
   introWhiteBar.style.top = posX + "px";
 
   //Set height
@@ -1164,6 +1193,11 @@ function contactAnimateWhiteSplitter(status) {
       transform: "rotate(0deg)"
     });
   }
+}
+
+function contactFooterSetCurrentYear() {
+  let d = new Date();
+  contactFooterSpan.textContent = d.getFullYear();
 }
 
 // DEBOUNCE FUNCTION
