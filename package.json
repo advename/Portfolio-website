@@ -1,0 +1,19 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "Portfolio website",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "lars",
+  "license": "ISC",
+  "dependencies": {
+    "gsap": "^2.0.2",
+    "hammerjs": "^2.0.8",
+    "is_js": "^0.9.0"
+  },
+  "devDependencies": {
+    "cssnano": "^4.1.4"
+  }
+}

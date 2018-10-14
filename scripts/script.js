@@ -1,6 +1,17 @@
 /* ==========================================================================
    Import dependencies
    ========================================================================== */
+import {
+  TweenMax,
+  TweenLite,
+  Power0,
+  TimelineMax,
+  SteppedEase
+} from "gsap/TweenMax";
+import ScrollToPlugin from "gsap/ScrollToPlugin";
+
+import Hammer from "hammerjs";
+import is from "is_js";
 
 /* ==========================================================================
    General
@@ -71,7 +82,13 @@ const portPageCountCurrent = document.querySelector(
 const portPageCountOutOf = document.querySelector("#port .pagecount .out-of");
 const portScrollbar = document.querySelector("#port .scrollbar");
 
-let portOffSetTop, portWorkMarginRight, portContainerLeft, portData, portWork;
+let portOffSetTop,
+  portWorkMarginRight,
+  portContainerWidth,
+  portMoveDistance,
+  portContainerLeft,
+  portData,
+  portWork;
 let portAllowScroll = true;
 let portAllowSlider = false;
 let portSliderAnimationActive = false;
@@ -86,7 +103,7 @@ const contactFooterSpan = document.querySelector("#contact footer span");
    ========================================================================== */
 document.addEventListener("DOMContentLoaded", () => {
   beforeInit(); //run before init
-  setTimeout(init, 100); //wait 100ms
+  setTimeout(init, 500); //wait 100ms
 });
 
 //Inject SVG's before init
@@ -102,9 +119,8 @@ function init() {
   window.scrollTo(0, 1);
 
   //Check if mobile or tablet (tablet landscape is 1024px)
-  isMobile = window.matchMedia("(max-width: 992px)").matches ? true : false;
-  if (isMobile) setupMobile();
-  console.log("Is it mobile/tablet: " + isMobile);
+  if (is.mobile()) setupMobile();
+  console.log("Is it mobile/tablet: " + is.mobile());
 
   //Get window height and width -> viewport height and width
   vh = window.innerHeight;
@@ -197,7 +213,7 @@ function mouseAnimations(e) {
 
 // Scroll Handler deciding direction and firing sections handler
 function scrollHandler(e) {
-  if (isMobile) {
+  if (is.mobile()) {
     //Handle mobile scrolling
     if (e.deltaY < 0) {
       //scrolling down
@@ -206,7 +222,7 @@ function scrollHandler(e) {
       //scrolling up
       scrollDir = "up";
     }
-  } else if (e.type == "wheel" || !isMobile) {
+  } else if (e.type == "wheel" || !is.mobile()) {
     //Handle Desktop scrolling
     if (e.deltaY > 0) {
       //scrolling down
@@ -925,7 +941,7 @@ function techDisplayData() {
 
 // Animate the slider by smooth infinite scrolling
 function techSliderAnimation() {
-  const duration = 30;
+  const duration = 40;
   //Move to half of whole width - minues last item to prevent a "jump"
   const moveTo =
     -techContainerWidth / 2 - techSliderItem.getBoundingClientRect().width;
