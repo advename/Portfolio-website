@@ -1,4 +1,8 @@
 /* ==========================================================================
+   Import dependencies
+   ========================================================================== */
+
+/* ==========================================================================
    General
    ========================================================================== */
 //*** Variables
@@ -11,6 +15,8 @@ const navBackground = document.querySelectorAll("nav .background");
 const navUL = document.querySelector("nav .front ul");
 const navLIS = document.querySelectorAll("nav ul li");
 const burgerMenu = document.querySelector("#burger-menu");
+const burgerMenuSpan = document.querySelectorAll("#burger-menu span");
+const loader = document.querySelector("#loader");
 let burgerMenuOpen = false;
 let circleDefColor = "#e3e3e3";
 let vh, vw, centerX, centerY, circleMaxW, circleTL;
@@ -83,12 +89,14 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(init, 100); //wait 100ms
 });
 
+//Inject SVG's before init
 function beforeInit() {
   svgToBeInjected.forEach(svg => {
     SVGInject(svg);
   });
 }
 
+//Initialize
 function init() {
   //Always start from top
   window.scrollTo(0, 1);
@@ -172,10 +180,11 @@ function init() {
   //Update to current year in footer
   contactFooterSetCurrentYear();
 
-  //Finally apply secton
+  //Finally apply sections and remove loader
   setTimeout(() => {
     sectionsHandler();
     heroCirclesCordinates();
+    removeLoader();
   }, 300);
 }
 
@@ -186,6 +195,7 @@ function mouseAnimations(e) {
   heroMouseAnimation(e);
 }
 
+// Scroll Handler deciding direction and firing sections handler
 function scrollHandler(e) {
   if (isMobile) {
     //Handle mobile scrolling
@@ -209,33 +219,32 @@ function scrollHandler(e) {
   sectionsHandler();
 }
 
+// Reset function used for debugging
 function reset() {
   portAllowScroll = true;
   smoothScrollToInUse = false;
 }
 
+// Smoothly scroll to section on page
 function smoothScrollTo(e) {
   if (portAllowScroll) {
-    smoothScrollToInUse = true;
-
     TweenMax.to(window, 0.7, {
       scrollTo: scrollTo,
       onStart: function() {
         console.log(sectionActive);
       },
       onComplete: function() {
-        smoothScrollToInUse = false;
         if (sectionActive === 3) {
           portAllowScroll = false;
         }
       }
     });
   } else {
-    console.log("this goas also");
     portSliderMove(e);
   }
 }
 
+// If isMobile is true, setup for mobile devices
 function setupMobile() {
   //First section shorter
   parents[0].style.height = window.innerHeight + "px";
@@ -243,6 +252,7 @@ function setupMobile() {
     window.screen.height - window.innerHeight + "px";
 }
 
+// in navigation menu, on click on an item, scroll to that section
 function navigatePage(e) {
   scrollDir = "down";
   sectionActive = e.target.dataset.page - 1; //trick sectionshandler
@@ -253,6 +263,7 @@ function navigatePage(e) {
   toggleBurgerMenu();
 }
 
+// Add class "active" to the current section inside navigation menu
 function liAddActiveClass(numb) {
   navLIS.forEach(li => {
     li.classList.remove("active");
@@ -260,11 +271,13 @@ function liAddActiveClass(numb) {
   navLIS[numb].classList.add("active");
 }
 
+// Get sections offset top position
 function getOffsetTop(el) {
   const rect = el.getBoundingClientRect();
   return rect.top + window.scrollY;
 }
 
+//Open / close burger menu
 function toggleBurgerMenu() {
   if (burgerMenuOpen) {
     //close burger menu
@@ -274,6 +287,11 @@ function toggleBurgerMenu() {
     navLIS.forEach(li => {
       li.classList.remove("nav-animation");
     });
+    burgerMenuSpan.forEach(span => {
+      span.style.removeProperty("transform");
+      span.style.removeProperty("margin-top");
+      span.style.removeProperty("border");
+    });
   } else {
     //open burger menu
     navBackground.forEach(back => {
@@ -282,14 +300,28 @@ function toggleBurgerMenu() {
     navLIS.forEach(li => {
       li.classList.add("nav-animation");
     });
+
+    burgerMenuSpan[1].style.transform = "translateX(-10vw)";
+    burgerMenuSpan[2].style.transform = "rotate(45deg)";
+    burgerMenuSpan[2].style.marginTop = "-13px";
+    burgerMenuSpan[0].style.transform = "rotate(135deg)";
+    burgerMenuSpan.forEach(span => {
+      span.style.border = "1px solid black";
+    });
   }
   burgerMenuOpen = !burgerMenuOpen;
+}
+
+//Remove loader after page load
+function removeLoader() {
+  loader.style.height = "0px";
 }
 
 /* ==========================================================================
    Section check and circles repositioning
    ========================================================================== */
 
+// Based on scroll dir and previous section, scroll to new section and apply functions
 function sectionsHandler() {
   // Save data to sessionStorage
   if (scrollDir === "up") {
@@ -302,7 +334,7 @@ function sectionsHandler() {
     }
   }
 
-  let runF = {
+  let applySection = {
     0: function() {
       //hero
       scrollTo = 0;
@@ -343,7 +375,7 @@ function sectionsHandler() {
     }
   };
 
-  runF[sectionActive]();
+  applySection[sectionActive]();
   liAddActiveClass(sectionActive);
   if (sectionActive != 4) {
     if (isMobile) circleDefColor = "rgba(227, 227, 227, 0.3);";
@@ -354,9 +386,6 @@ function sectionsHandler() {
   }
   smoothScrollTo();
 }
-
-//Check based on scrolling which section is currently active and apply relative functions
-function sectionCheck() {}
 
 //Reposition Circles in px
 function repositionCircles(cord) {
@@ -525,6 +554,7 @@ function introCirclesCordinates() {
   repositionCircles(cord);
 }
 
+// Position white bar over headline (needs to be calculated with JS)
 function introHeadlineWhiteBarPosition() {
   //Calculate position and height for the white bar and apply them
   const fontSize = parseFloat(
@@ -552,6 +582,7 @@ function introHeadlineWhiteBarPosition() {
   introWhiteBar.style.height = height + "px";
 }
 
+// Move the white bar in when section intro appears
 function introHeadlineWhiteBarAnimation() {
   //Set width
   let moveTo = introWrapper.offsetLeft + introHeadline.width + 100;
@@ -843,6 +874,38 @@ function techSetSlideData() {
     {
       title: "Adobe XD",
       img: "xd.svg"
+    },
+    {
+      title: "MongoDB",
+      img: "mongodb-logo.svg"
+    },
+    {
+      title: "expressJS",
+      img: "express.svg"
+    },
+    {
+      title: "Git Version Control",
+      img: "git.svg"
+    },
+    {
+      title: "Windows Super User",
+      img: "windows.svg"
+    },
+    {
+      title: "Mac OS",
+      img: "macos.svg"
+    },
+    {
+      title: "Android Super User",
+      img: "android.svg"
+    },
+    {
+      title: "iOS Super User",
+      img: "apple.svg"
+    },
+    {
+      title: "Linux Ubuntu",
+      img: "ubuntu.svg"
     }
   ];
 }
@@ -988,6 +1051,7 @@ function portDataSetup() {
   ];
 }
 
+// Display the items from portData using template and clone
 function portDisplayWork() {
   portData.forEach(work => {
     let clone = portTemplate.cloneNode(true);
@@ -1134,10 +1198,12 @@ function portSliderSlideLeft() {
   }
 }
 
+// Update page number on each switch
 function portUpdatePage() {
   portPageCountCurrent.textContent = portCurrentPage + "";
 }
 
+// Update scrollbar length depending on page number
 function portUpdateScrollbar() {
   let barWidth;
   if (vw < 1200) {
@@ -1195,6 +1261,7 @@ function contactAnimateWhiteSplitter(status) {
   }
 }
 
+// Set always current year for copyright
 function contactFooterSetCurrentYear() {
   let d = new Date();
   contactFooterSpan.textContent = d.getFullYear();
@@ -1218,6 +1285,7 @@ function debounce(func, wait, immediate) {
   };
 }
 
+// Throttle function
 function throttle(func, wait, options) {
   var context, args, result;
   var timeout = null;
