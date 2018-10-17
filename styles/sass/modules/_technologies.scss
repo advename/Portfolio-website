@@ -1,0 +1,244 @@
+/* ==========================================================================
+   Technologies
+   ========================================================================== */
+
+$tech-wrapper-height: 90vh;
+$tech-wrapper-width: 80vw;
+
+#tech {
+  h2 {
+    font-size: 35px;
+  }
+  .wrapper {
+    width: $tech-wrapper-width;
+    max-width: 1024px;
+    height: $tech-wrapper-height;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    padding-top: calc((100vh - $tech-wrapper-height) / 2);
+  }
+  .animation {
+    position: relative;
+    top: 40%;
+    transform: translateY(-50%);
+    display: block;
+    width: 100%;
+  }
+  .code-editor {
+    position: relative;
+    float: left;
+    z-index: 20;
+  }
+  .code-editor svg {
+    width: calc($tech-wrapper-width / 3);
+    max-width: 341px;
+  }
+  .code-editor svg .cls-1 {
+    /* remove white lines*/
+    stroke: none;
+    stroke-miterlimit: 0;
+    stroke-width: 0;
+  }
+  .line {
+    height: 2px;
+    width: calc($tech-wrapper-width - 200px);
+    max-width: 824px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    margin: auto;
+    background: white;
+    z-index: 15;
+  }
+  .device {
+    width: 200px;
+    height: 200px;
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    right: 0px;
+
+    width: 200px;
+    height: 200px;
+
+    margin-top: -100px;
+    margin-left: -100px;
+    z-index: 20;
+  }
+  .device .dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 10;
+
+    width: 160px;
+    height: 100px;
+
+    margin-top: -50px;
+    margin-left: -80px;
+
+    border-radius: 5px;
+
+    background-color: #1e3f57;
+
+    animation: dot1 5s cubic-bezier(0.55, 0.3, 0.24, 0.99) infinite;
+  }
+  .device .dot:nth-child(2) {
+    z-index: 11;
+
+    width: 150px;
+    height: 90px;
+
+    margin-top: -45px;
+    margin-left: -75px;
+
+    border-radius: 3px;
+
+    background-color: #3c617d;
+
+    animation-name: dot2;
+  }
+  .device .dot:nth-child(3) {
+    z-index: 12;
+
+    width: 40px;
+    height: 20px;
+
+    margin-top: 50px;
+    margin-left: -20px;
+
+    border-radius: 0 0 5px 5px;
+
+    background-color: #6bb2cd;
+
+    animation-name: dot3;
+  }
+  .slider {
+    background: #282828;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100px;
+    padding-bottom: 10px;
+  }
+  .slider .box {
+    width: $tech-wrapper-width;
+    max-width: 1024px;
+    height: 100px;
+    overflow: hidden;
+    position: relative;
+    margin: 0 auto;
+  }
+  .slider .container:last-of-type {
+    height: 100px;
+    white-space: nowrap;
+    position: relative;
+    left: 0;
+  }
+  .slider .item {
+    height: 80px;
+    text-align: center;
+    padding: 10px 0;
+    min-width: 100px;
+    margin: 0 50px;
+    display: inline-block;
+    white-space: normal;
+  }
+  .slider .item img {
+    height: 70%;
+    width: auto;
+    margin: 0 auto;
+  }
+}
+
+//Keyframes for device switcher
+@keyframes dot1 {
+  3%,
+  97% {
+    width: 160px;
+    height: 100px;
+
+    margin-top: -50px;
+    margin-left: -80px;
+  }
+  30%,
+  36% {
+    width: 80px;
+    height: 120px;
+
+    margin-top: -60px;
+    margin-left: -40px;
+  }
+  63%,
+  69% {
+    width: 40px;
+    height: 80px;
+
+    margin-top: -40px;
+    margin-left: -20px;
+  }
+}
+
+@keyframes dot2 {
+  3%,
+  97% {
+    width: 150px;
+    height: 90px;
+
+    margin-top: -45px;
+    margin-left: -75px;
+  }
+  30%,
+  36% {
+    width: 70px;
+    height: 96px;
+
+    margin-top: -48px;
+    margin-left: -35px;
+  }
+  63%,
+  69% {
+    width: 32px;
+    height: 60px;
+
+    margin-top: -30px;
+    margin-left: -16px;
+  }
+}
+
+@keyframes dot3 {
+  3%,
+  97% {
+    width: 40px;
+    height: 20px;
+
+    margin-top: 50px;
+    margin-left: -20px;
+  }
+  30%,
+  36% {
+    width: 8px;
+    height: 8px;
+
+    margin-top: 49px;
+    margin-left: -5px;
+
+    border-radius: 8px;
+  }
+  63%,
+  69% {
+    width: 16px;
+    height: 4px;
+
+    margin-top: -37px;
+    margin-left: -8px;
+
+    border-radius: 10px;
+  }
+}

@@ -12,6 +12,10 @@ import ScrollToPlugin from "gsap/ScrollToPlugin";
 
 import Hammer from "hammerjs";
 import is from "is_js";
+import validator from "validator-js";
+
+//Import Sass style
+import "../styles/sass/main.scss";
 
 /* ==========================================================================
    General
@@ -680,9 +684,7 @@ function techCirclesAnimation() {
       {
         x: techDistance,
         ease: Power0.easeNone,
-        onComplete: function() {
-          techCirclesActive = false;
-        }
+        onComplete: function() {}
       }
     );
 }
@@ -908,20 +910,24 @@ function techSetSlideData() {
       img: "windows.svg"
     },
     {
-      title: "Mac OS",
+      title: "Mac OS User",
       img: "macos.svg"
     },
     {
-      title: "Android Super User",
+      title: "Android Power User",
       img: "android.svg"
     },
     {
-      title: "iOS Super User",
+      title: "iOS Power User",
       img: "apple.svg"
     },
     {
-      title: "Linux Ubuntu",
+      title: "Linux Ubuntu User",
       img: "ubuntu.svg"
+    },
+    {
+      title: "RESTful API",
+      img: "restful-api.svg"
     }
   ];
 }

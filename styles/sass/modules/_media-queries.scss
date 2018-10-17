@@ -1,0 +1,210 @@
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
+/* Extra large devices (large desktops, 1200px and up) */
+@media (max-width: 1200px) {
+  #contact .white-splitter {
+    left: 50vw;
+  }
+}
+/* Large devices (desktops, 992px and up) */
+@media (max-width: 992px) {
+  #contact .white-splitter {
+    left: 45vw;
+  }
+}
+/* Medium devices (tablets, 768px and down) */
+@media (max-width: 768px) {
+  .circles {
+    background: rgba(227, 227, 227, 0.3);
+  }
+  #intro .headline h2 {
+    font-size: 35px;
+  }
+  #tech .wrapper {
+    height: 70vh;
+    position: absolute;
+    padding-top: 0;
+  }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (max-width: 576px) {
+  #intro,
+  #tech,
+  #port,
+  #contact {
+    position: relative;
+    width: 100vw;
+    max-width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+  }
+  nav ul {
+    font-size: 35px;
+  }
+
+  #hero {
+    .wrapper {
+      height: 70vh;
+      grid-template-rows: repeat(2, 1fr);
+    }
+    .title {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto 0;
+      grid-column: span 8;
+      grid-row: 2;
+    }
+    .title-image {
+      grid-column: span 8;
+      grid-row: 1;
+    }
+  }
+
+  #intro {
+    .wrapper {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+      column-gap: 20px;
+      height: 90vh;
+    }
+    .wrapper > div {
+      grid-column: span 8;
+      height: auto;
+    }
+    .wrapper .headline {
+      grid-row: 1/3;
+      margin: 0 auto;
+      height: 100px;
+    }
+    .headline h2 {
+      font-size: 30px;
+    }
+    .wrapper .image {
+      margin: 0 auto;
+      height: 150px;
+      grid-row: 3/6;
+    }
+    .wrapper .description {
+      margin: 0 auto;
+      height: 100px;
+      grid-row: 6/11;
+    }
+    .map {
+      display: none;
+    }
+  }
+
+  #tech {
+    .device {
+      transform: scale(0.5);
+      right: -50px;
+    }
+    .line {
+      width: 66%;
+    }
+  }
+
+  #port {
+    .wrapper {
+      padding-top: 35px;
+    }
+    .back {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+      max-width: 1200px;
+    }
+    .back .title {
+      grid-column: span 2;
+      grid-row: 1 / 2;
+      margin-left: 0px;
+    }
+    .back .title h2 {
+      font-size: 25px;
+    }
+    .back .title p {
+      font-size: 12px;
+    }
+    .back .box {
+      grid-column: span 2;
+      grid-row: 2 / 7;
+      background: black;
+    }
+    .front {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      max-width: 1200px;
+    }
+    .front .image {
+      grid-column: span 2;
+      grid-row: 2 / 3;
+    }
+    .front .info {
+      grid-column: span 2;
+      grid-row: 3 / 6;
+    }
+    .front .image > div {
+      margin-top: 50px;
+      width: 80%;
+    }
+    .front .image > div:after {
+      padding-top: 50%;
+    }
+    .front .call-to-action {
+      bottom: auto;
+    }
+    .front .description {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+    .front .description p {
+      margin: 0 5px;
+      white-space: pre-wrap;
+    }
+    .front .call-to-action {
+      grid-column: span 2;
+      grid-row: 3 / 5;
+    }
+    .front .call-to-action a {
+      display: block;
+      text-align: center;
+      width: 50%;
+      margin: 0px auto 5px auto;
+    }
+  }
+
+  #contact {
+    .wrapper {
+      height: 90vh;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+    }
+    .wrapper > div {
+      grid-column: span 8;
+      grid-row: span 2;
+      height: auto;
+    }
+    .left > h2 {
+      display: none;
+    }
+    .presentations {
+      display: none;
+    }
+    .white-splitter {
+      left: -15vw;
+      top: 20vh;
+    }
+    .right {
+      grid-row: span 4;
+    }
+    .right h2 {
+      font-size: 40px;
+      margin-top: 40px;
+      margin-bottom: 0px;
+    }
+  }
+}

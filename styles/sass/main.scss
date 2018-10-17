@@ -1,0 +1,25 @@
+//Sass controller
+
+//Basic
+@import "modules/css-reset";
+@import "modules/colors";
+@import "modules/init";
+@import "modules/nav";
+
+//Hero Section
+@import "modules/hero";
+
+//Intro section
+@import "modules/intro";
+
+//Technologies section
+@import "modules/technologies";
+
+//Portfolio section
+@import "modules/portfolio";
+
+//Contact section
+@import "modules/contact";
+
+//Media queries
+@import "modules/media-queries";

@@ -11,9 +11,11 @@
   "dependencies": {
     "gsap": "^2.0.2",
     "hammerjs": "^2.0.8",
-    "is_js": "^0.9.0"
+    "is_js": "^0.9.0",
+    "validator-js": "^0.2.1"
   },
   "devDependencies": {
-    "cssnano": "^4.1.4"
+    "cssnano": "^4.1.4",
+    "node-sass": "^4.9.4"
   }
 }

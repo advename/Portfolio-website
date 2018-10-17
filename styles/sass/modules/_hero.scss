@@ -1,0 +1,95 @@
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+
+#hero .wrapper {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-gap: 0px;
+  width: 70vw;
+  max-width: 860px;
+  height: 50vmin;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  .wrapper > div {
+    position: relative;
+  }
+  .title {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto 0;
+    grid-column: span 5;
+  }
+  .title h1 {
+    font-size: 40px;
+  }
+  .title p {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+  }
+  .title-image {
+    width: 100%;
+    grid-column: span 3;
+  }
+  .title-image img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto 0;
+    width: 100%;
+  }
+
+  /*
+     Scroll hint (mouse with moving scroller)
+     ========================================================================== */
+  #scroll-hint {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0px;
+    margin: 0 auto;
+    width: 109px;
+  }
+  #scroll-hint .mouse {
+    position: relative;
+    margin: 0 auto;
+    height: 34px;
+    width: 19px;
+    border: 1px solid white;
+    border-radius: 20px;
+  }
+  #scroll-hint .dot {
+    width: 3px;
+    height: 6px;
+    background-color: white;
+    position: relative;
+    top: 3px;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+    border-radius: 5px;
+    animation: scrollMouse 1.2s linear infinite;
+    opacity: 0.5;
+  }
+  #scroll-hint p {
+    font-size: 12px;
+  }
+}
+
+@keyframes scrollMouse {
+  50% {
+    opacity: 1;
+    top: 15px;
+  }
+  100% {
+    opacity: 0;
+    top: 20px;
+  }
+}

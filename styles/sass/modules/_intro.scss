@@ -1,0 +1,99 @@
+/* ==========================================================================
+   Intro
+   ========================================================================== */
+$intro-wrapper-height: 80vmin;
+
+#intro {
+  .wrapper {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    column-gap: 20px;
+    width: 80vw;
+    max-width: 1024px;
+    height: $intro-wrapper-height;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    > div {
+      position: relative;
+      grid-column: span 4;
+      height: calc($intro-wrapper-height / 2);
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  .image {
+    width: 100%;
+
+    img {
+      height: calc($intro-wrapper-height / 2 - 50px);
+      position: absolute;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  .headline {
+    position: relative;
+    display: table;
+    text-align: center;
+
+    h2 {
+      display: table-cell;
+      vertical-align: middle;
+      font-size: 45px;
+      opacity: 0;
+    }
+  }
+
+  .white-bar-headline {
+    position: absolute;
+    height: 50px;
+    width: 0vw;
+    background: $primary_color_white;
+    right: 0;
+    top: 0;
+  }
+
+  .description {
+    width: 90%;
+    display: table;
+    text-align: justify;
+
+    p {
+      display: table-cell;
+      vertical-align: middle;
+      line-height: 30px;
+    }
+  }
+  .map {
+    display: table;
+    text-align: justify;
+    width: 100%;
+
+    svg {
+      position: absolute;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+
+      .cls-2 {
+        fill: #fff;
+      }
+    }
+  }
+}

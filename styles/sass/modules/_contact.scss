@@ -1,0 +1,154 @@
+/* ==========================================================================
+   Contact
+   ========================================================================== */
+
+$contact-wrapper-height: 90vmin;
+$contact-wrapper-width: 100vw;
+
+#contact {
+  height: 100vh;
+  max-height: 100vh;
+
+  .wrapper {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    column-gap: 10px;
+    width: $contact-wrapper-height;
+    max-width: 1200px;
+    height: $contact-wrapper-height;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .wrapper > div {
+    position: relative;
+    grid-column: span 4;
+    height: calc($contact-wrapper-height / 2);
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .white-splitter {
+    width: 150vw;
+    height: 150vh;
+    background: $primary_color_white;
+    position: absolute;
+    top: 0;
+    left: 40vw;
+    z-index: -10;
+    transform-origin: center;
+  }
+
+  .left > h2 {
+    margin-top: 20px;
+    font-size: 35px;
+    margin-left: 50px;
+  }
+
+  .left .presentations {
+    margin-top: 40px;
+    max-height: 70%;
+  }
+
+  .presentations ul {
+    list-style-type: disc;
+    list-style-position: outside;
+    display: block;
+  }
+
+  .presentations li {
+    display: block;
+    display: list-item;
+    margin-left: 15%;
+    margin-bottom: 30px;
+  }
+  .presentations h3 {
+    font-size: 20px;
+  }
+  .presentations p {
+    font-size: 16px;
+    margin-left: 50px;
+  }
+  .external {
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    width: 50%;
+  }
+  .external img {
+    width: 20%;
+  }
+  .external a:last-of-type {
+    margin-left: 40%;
+  }
+  .right {
+    color: $primary_color_black;
+    display: table;
+  }
+  .right > div {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+  }
+  .right h2 {
+    font-size: 40px;
+    margin-top: 0px;
+    margin-bottom: 100px;
+  }
+  .right form {
+    width: 300px;
+    margin: 0 auto;
+  }
+  .right input,
+  .right textarea {
+    width: 300px;
+    border: none;
+    margin-top: 20px;
+    font-size: 20px;
+    background: none;
+    border-bottom: 1px solid #a2a2a2;
+    padding-bottom: 5px;
+    min-height: 20px;
+  }
+  .right input::placeholder,
+  .right textarea::placeholder {
+    color: #a2a2a2;
+    font-family: "Quicksand", sans-serif;
+    font-weight: 400;
+    background: none;
+  }
+  .right input[type="submit"] {
+    margin-top: 100px;
+    border: 1px solid $primary_color_black;
+    padding: 5px 20px;
+    width: 140px;
+    font-size: 30px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  textarea:focus,
+  input:focus {
+    outline: none;
+  }
+  .right input[type="submit"]:hover {
+    background: $primary_color_black;
+    color: white;
+  }
+  footer {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #979797;
+  }
+}

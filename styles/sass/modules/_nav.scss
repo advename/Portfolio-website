@@ -1,0 +1,107 @@
+/* ==========================================================================
+   Navigation and Burger Menu
+   ========================================================================== */
+
+#burger-menu {
+  position: fixed;
+  top: 20px;
+  left: 30px;
+  width: 30px;
+  height: 30px;
+  z-index: 150;
+  cursor: pointer;
+
+  span {
+    width: 30px;
+    height: 3px;
+    margin-top: 5px;
+    background: white;
+    display: block;
+    transition: all 0.3s;
+  }
+  span:nth-of-type(2) {
+    width: 20px;
+    height: 2px;
+    margin-top: 5px;
+    margin-left: 2px;
+    background: white;
+    display: block;
+  }
+}
+
+nav .background {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: calc(100vh / 5 + 1px);
+  background: #202020;
+  transition: left 0.3s;
+  z-index: 140;
+
+  .background:nth-of-type(2) {
+    top: calc((100vh / 5) * 1);
+  }
+  .background:nth-of-type(3) {
+    top: calc((100vh / 5) * 2);
+  }
+  .background:nth-of-type(4) {
+    top: calc((100vh / 5) * 3);
+  }
+  .background:nth-of-type(5) {
+    top: calc((100vh / 5) * 4);
+  }
+  .background:nth-of-type(odd) {
+    left: -101vw;
+  }
+  .background:nth-of-type(even) {
+    left: 101vw;
+  }
+  > .back .background.nav-animation {
+    left: 0;
+  }
+  > .front li.nav-animation {
+    left: 0;
+  }
+  ul {
+    text-align: center;
+    font-size: 50px;
+  }
+  li {
+    width: 100vw;
+    left: 0px;
+    text-transform: uppercase;
+    position: fixed;
+    top: 0px;
+    padding-top: 50px;
+    height: calc(100vh / 5 + 1px - 50px);
+    transition: all 0.3s;
+    cursor: pointer;
+    z-index: 145;
+  }
+  li.active {
+    color: #202020;
+    background: #e3e3e3;
+  }
+  li:hover {
+    color: #202020;
+    background: #e3e3e3;
+  }
+  li:nth-of-type(2) {
+    top: calc((100vh / 5) * 1);
+  }
+  li:nth-of-type(3) {
+    top: calc((100vh / 5) * 2);
+  }
+  li:nth-of-type(4) {
+    top: calc((100vh / 5) * 3);
+  }
+  li:nth-of-type(5) {
+    top: calc((100vh / 5) * 4);
+  }
+  li:nth-of-type(odd) {
+    left: -101vw;
+  }
+  li:nth-of-type(even) {
+    left: 101vw;
+  }
+}

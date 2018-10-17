@@ -1,0 +1,57 @@
+/* ==========================================================================
+   General
+   ========================================================================== */
+html {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  max-width: 100%;
+  /*font-family: "Open Sans", sans-serif;*/
+  font-family: "Quicksand", sans-serif;
+  font-weight: 400; /* 400 - regular*/
+  position: relative;
+  background: $primary_color_black;
+  color: $primary_color_white;
+  overflow: hidden;
+}
+
+.overflow-hidden {
+  overflow: hidden !important;
+}
+
+main {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#hero,
+#intro,
+#tech,
+#port,
+#contact {
+  position: relative;
+  width: 100vw;
+  max-width: 100%;
+  height: 100vh;
+}
+
+.circles {
+  position: absolute;
+  z-index: -1;
+  height: 30px;
+  width: 30px;
+  background: #e9e9e9;
+  border-radius: 50%;
+}
+
+/* Clear float */
+.clearfix {
+  content: "";
+  clear: both;
+  display: block;
+}
