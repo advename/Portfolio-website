@@ -71,7 +71,8 @@ let techStartX,
   techContainerWidth,
   techEditorLines,
   techEditorCodeTL,
-  techSliderItem;
+  techSliderItem,
+  techSliderItemMarginRight;
 let techEditorLinesWidth = [];
 let techSliderActivated = false;
 
@@ -175,7 +176,7 @@ function init() {
 
   //Get last item to calculate moveTo in slider animation
   techSliderItem = document.querySelector(
-    "#tech .slider .container .item:last-of-type"
+    "#tech .slider .container .item:first-of-type"
   );
 
   //Activate animation
@@ -697,6 +698,9 @@ function techCodeEditorSetup() {
     techEditorLinesWidth.push(temp);
   });
   techEditorLinesWidth;
+  techSliderItemMarginRight = window
+    .getComputedStyle(techSliderItem, null)
+    .getPropertyValue("margin-right");
 }
 
 // Animate width of each line in the Code Editor from 0px to initial width
@@ -949,8 +953,7 @@ function techDisplayData() {
 function techSliderAnimation() {
   const duration = 40;
   //Move to half of whole width - minues last item to prevent a "jump"
-  const moveTo =
-    -techContainerWidth / 2 - techSliderItem.getBoundingClientRect().width;
+  const moveTo = -techContainerWidth / 2 - 50;
   if (!techSliderActivated) {
     //apply animation
     const tm = new TweenMax.fromTo(
