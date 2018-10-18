@@ -4,7 +4,15 @@
   "description": "Portfolio website",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sass": "node-sass ./styles/sass/main.scss ./styles/style.css -w",
+    "myParcel": "parcel index.html --public-url . -watch --no-minify",
+    "dev-mode-server": "npm run sass | live-server --no-browser",
+    "live-server-dist": "cd dist & live-server --no-browser",
+    "dev-mode-parcel-combined": "npm run sass | npm run myParcel | npm run live-server-dist",
+    "dev-mode-parcel-only": "parcel index.html",
+    "build-mode-parcel": "parcel build index.html --public-url .",
+    "clear": " cd dist & del *.* /q"
   },
   "author": "lars",
   "license": "ISC",

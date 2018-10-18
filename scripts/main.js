@@ -1,6 +1,13 @@
 /* ==========================================================================
    Import dependencies
    ========================================================================== */
+
+/*
+//Import SCSS to be compiled to CSS
+import "../styles/sass/main.scss";
+    or link inside your HTML file to your SCSS file
+      <link href="styles/sass/main.scss" rel="stylesheet" type="text/css" />        
+
 import {
   TweenMax,
   TweenLite,
@@ -14,15 +21,11 @@ import Hammer from "hammerjs";
 import is from "is_js";
 import validator from "validator-js";
 
-//Import Sass style
-import "../styles/sass/main.scss";
-
+*/
 /* ==========================================================================
    General
    ========================================================================== */
 //*** Variables
-const html = document.querySelector("html");
-const body = document.querySelector("body");
 const parents = document.querySelectorAll(".parent");
 const circles = document.querySelectorAll(".circles"); //background circles
 const svgToBeInjected = document.querySelectorAll(".inject-svg");
@@ -61,8 +64,11 @@ const techWrapper = document.querySelector("#tech .wrapper");
 const techLineDOM = document.querySelector("#tech .animation .line");
 
 const techTemplate = document.querySelector("#tech-template").content;
+const techSlider = document.querySelector("#tech .slider");
 const techContainer = document.querySelector("#tech .slider .container");
 const techBox = document.querySelector("#tech .slider .box");
+
+const techHurry = document.querySelector("#tech .hurry");
 
 let techStartX,
   techDistance,
@@ -72,9 +78,13 @@ let techStartX,
   techEditorLines,
   techEditorCodeTL,
   techSliderItem,
-  techSliderItemMarginRight;
+  techSliderItemAll,
+  techSliderItemAllImg,
+  techSliderItemMarginRight,
+  techSliderTL;
 let techEditorLinesWidth = [];
 let techSliderActivated = false;
+let techCompleteListActive = false;
 
 //*** Portfolio
 const port = document.querySelector("#port");
@@ -150,8 +160,8 @@ function init() {
    */
   circleMaxW = vw < 1200 ? vw : 1200;
 
-  console.log(vh);
-  console.log(vw);
+  console.log("Viewport height: " + vh);
+  console.log("Viewport width: " + vw);
 
   //Open close burger menu
   burgerMenu.addEventListener("click", toggleBurgerMenu);
@@ -167,6 +177,7 @@ function init() {
   introHeadline = introHeadlineDOM.getBoundingClientRect();
 
   //Populate Tech data and display
+  techHurry.addEventListener("click", techToggleCompleteList);
   techSetSlideData();
   techDisplayData(); //call twice for smooth slider repeat
   techDisplayData(); //call twice for smooth slider repeat
@@ -176,7 +187,13 @@ function init() {
 
   //Get last item to calculate moveTo in slider animation
   techSliderItem = document.querySelector(
-    "#tech .slider .container .item:first-of-type"
+    "#tech .slider .container .item:last-of-type"
+  );
+  techSliderItemAll = document.querySelectorAll(
+    "#tech .slider .container .item"
+  );
+  techSliderItemAllImg = document.querySelectorAll(
+    "#tech .slider .container .item img"
   );
 
   //Activate animation
@@ -206,7 +223,7 @@ function init() {
     sectionsHandler();
     heroCirclesCordinates();
     removeLoader();
-  }, 300);
+  }, 1000);
 }
 
 // Mouse movement handler
@@ -251,9 +268,7 @@ function smoothScrollTo(e) {
   if (portAllowScroll) {
     TweenMax.to(window, 0.7, {
       scrollTo: scrollTo,
-      onStart: function() {
-        console.log(sectionActive);
-      },
+      onStart: function() {},
       onComplete: function() {
         if (sectionActive === 3) {
           portAllowScroll = false;
@@ -345,13 +360,16 @@ function removeLoader() {
 // Based on scroll dir and previous section, scroll to new section and apply functions
 function sectionsHandler() {
   // Save data to sessionStorage
-  if (scrollDir === "up") {
-    if (sectionActive > 0) {
-      --sectionActive;
-    }
-  } else if (scrollDir === "down") {
-    if (sectionActive < sections.length - 1) {
-      ++sectionActive;
+  if (portAllowScroll) {
+    //use portAllowScroll to bugfix the page jumping around after portfolio
+    if (scrollDir === "up") {
+      if (sectionActive > 0) {
+        --sectionActive;
+      }
+    } else if (scrollDir === "down") {
+      if (sectionActive < sections.length - 1) {
+        ++sectionActive;
+      }
     }
   }
 
@@ -396,15 +414,21 @@ function sectionsHandler() {
     }
   };
 
-  applySection[sectionActive]();
-  liAddActiveClass(sectionActive);
+  //use portAllowScroll to bugfix the page jumping around after portfolio
+  if (portAllowScroll) {
+    applySection[sectionActive]();
+    liAddActiveClass(sectionActive);
+  }
+
+  //Make circles black on contact section
   if (sectionActive != 4) {
     if (isMobile) circleDefColor = "rgba(227, 227, 227, 0.3);";
     else if (!isMobile) circleDefColor = "#e3e3e3";
-  }
-  if (sectionActive === 1) {
+  } else {
     circleDefColor = "#e3e3e3";
   }
+
+  //Apply smoothscroll to section
   smoothScrollTo();
 }
 
@@ -588,7 +612,6 @@ function introHeadlineWhiteBarPosition() {
     .getPropertyValue("padding-top");
   const height = fontSize * 4;
   let posX;
-  console.log(introHeadlineDOM.offsetTop);
   if (isMobile) {
     //Set position from top on mobile devices
     posX = introHeadline.height - height / 2;
@@ -596,7 +619,6 @@ function introHeadlineWhiteBarPosition() {
     //Set position from top on desktop devices
     posX = introHeadline.height / 2 - introWrapper.offsetTop;
   }
-  console.log(introHeadline);
   introWhiteBar.style.top = posX + "px";
 
   //Set height
@@ -952,11 +974,22 @@ function techDisplayData() {
 // Animate the slider by smooth infinite scrolling
 function techSliderAnimation() {
   const duration = 40;
+
   //Move to half of whole width - minues last item to prevent a "jump"
-  const moveTo = -techContainerWidth / 2 - 50;
+  const moveTo =
+    -techContainerWidth / 2 -
+    techSliderItem.getBoundingClientRect().width -
+    3 *
+      Number(
+        window
+          .getComputedStyle(techSliderItem, null)
+          .getPropertyValue("margin-right")
+          .match(/\d/g)
+          .join("")
+      );
   if (!techSliderActivated) {
     //apply animation
-    const tm = new TweenMax.fromTo(
+    techSliderTL = new TweenMax.fromTo(
       techContainer,
       duration,
       { left: 0, ease: Power0.easeNone },
@@ -970,6 +1003,36 @@ function techSliderAnimation() {
   } else {
     //only apply once
   }
+}
+
+// Instead of slider animation open the whole box to full page and show all technologies at once!
+function techToggleCompleteList() {
+  if (techCompleteListActive) {
+    //Close complete list
+    techSliderTL.play();
+    techSlider.classList.remove("completeList");
+    techBox.classList.remove("completeList");
+    techContainer.classList.remove("completeList");
+    techSliderItemAll.forEach(item => {
+      item.classList.remove("completeList");
+    });
+    techSliderItemAllImg.forEach(img => {
+      img.classList.remove("completeList");
+    });
+  } else {
+    //open complete list
+    techSliderTL.pause(0);
+    techSlider.classList.add("completeList");
+    techBox.classList.add("completeList");
+    techContainer.classList.add("completeList");
+    techSliderItemAll.forEach(item => {
+      item.classList.add("completeList");
+    });
+    techSliderItemAllImg.forEach(img => {
+      img.classList.add("completeList");
+    });
+  }
+  techCompleteListActive = !techCompleteListActive;
 }
 
 /* ==========================================================================
@@ -1151,7 +1214,6 @@ function portSliderMove(e) {
     //scrolling up -> go left
 
     portSliderSlideLeft(e);
-    console.log("Wassuup");
   } else if (scrollDir === "down") {
     //scrolling down -> go right
 
@@ -1164,8 +1226,6 @@ function portSliderSlideRight() {
   portContainerLeft = portContainer.offsetLeft;
   const portLimitRight = portMoveDistance - portContainerWidth;
   const moveTo = portContainerLeft - portMoveDistance;
-  console.log("Port info:" + portContainerLeft + " - " + portMoveDistance);
-  console.log("Port info:" + portCurrentPage + " - " + portData.length);
 
   //Check if next page is allowed based on page and if an animation is occuring
   if (portCurrentPage < portData.length && !portSliderAnimationActive) {
@@ -1188,6 +1248,8 @@ function portSliderSlideRight() {
     setTimeout(() => {
       portToggleAllowScroll(true);
       portToggleAllowSlider(false);
+      sectionActive = sectionActive + 1;
+      sectionsHandler();
     }, 400);
   }
 }
@@ -1215,11 +1277,11 @@ function portSliderSlideLeft() {
     portUpdateScrollbar();
   } else if (portCurrentPage === 1) {
     //over the limit, dont move
-    console.log("Over the limit");
     setTimeout(() => {
       portToggleAllowScroll(true);
       portToggleAllowSlider(false);
-    }, 1000);
+      sectionsHandler();
+    }, 400);
   }
 }
 
@@ -1294,7 +1356,6 @@ function contactFooterSetCurrentYear() {
 
 // DEBOUNCE FUNCTION
 function debounce(func, wait, immediate) {
-  console.log("debounce");
   var timeout;
   return function() {
     var context = this,

@@ -1,21 +1,21 @@
 /* ==========================================================================
    Hero
    ========================================================================== */
-
-#hero .wrapper {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-gap: 0px;
-  width: 70vw;
-  max-width: 860px;
-  height: 50vmin;
-  margin: auto;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
+#hero {
+  .wrapper {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-gap: 0px;
+    width: 70vw;
+    max-width: 860px;
+    height: 50vmin;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
   .wrapper > div {
     position: relative;
   }
@@ -47,7 +47,7 @@
   }
 
   /*
-     Scroll hint (mouse with moving scroller)
+     Scroll mouse
      ========================================================================== */
   #scroll-hint {
     position: absolute;

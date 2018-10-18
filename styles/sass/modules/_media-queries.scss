@@ -22,7 +22,7 @@
     font-size: 35px;
   }
   #tech .wrapper {
-    height: 70vh;
+    height: 80vh;
     position: absolute;
     padding-top: 0;
   }
@@ -105,6 +105,33 @@
     }
     .line {
       width: 66%;
+    }
+    .slider {
+      height: 80px;
+    }
+    .slider .box {
+      height: 80px;
+    }
+    .slider .item {
+      height: 60px;
+    }
+    .slider.completeList {
+      width: 90vw;
+      left: -5vw;
+    }
+    .slider .box.completeList {
+      height: 100%;
+      width: 100%;
+    }
+    .slider .item.completeList {
+      height: auto;
+      min-width: 10px;
+      margin: 2px 10px 0px 0px;
+      background: $primary_color_white;
+      color: $primary_color_black;
+    }
+    .slider .item.completeList p {
+      margin-top: 0px;
     }
   }
 
@@ -205,6 +232,15 @@
       font-size: 40px;
       margin-top: 40px;
       margin-bottom: 0px;
+    }
+    .right input[type="submit"] {
+      margin-top: 20px;
+      padding: 5px 10px;
+      width: 100px;
+      font-size: 20px;
+    }
+    footer p {
+      font-size: 12px;
     }
   }
 }

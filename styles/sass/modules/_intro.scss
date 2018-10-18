@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Intro
+   Intro 
    ========================================================================== */
 $intro-wrapper-height: 80vmin;
 
@@ -21,7 +21,7 @@ $intro-wrapper-height: 80vmin;
     > div {
       position: relative;
       grid-column: span 4;
-      height: calc($intro-wrapper-height / 2);
+      height: calc(#{$intro-wrapper-height} / 2);
       margin: auto;
       top: 0;
       bottom: 0;
@@ -34,7 +34,7 @@ $intro-wrapper-height: 80vmin;
     width: 100%;
 
     img {
-      height: calc($intro-wrapper-height / 2 - 50px);
+      height: calc(#{$intro-wrapper-height} / 2 - 50px);
       position: absolute;
       margin: auto;
       top: 0;
@@ -61,9 +61,9 @@ $intro-wrapper-height: 80vmin;
     position: absolute;
     height: 50px;
     width: 0vw;
-    background: $primary_color_white;
     right: 0;
     top: 0;
+    background: $primary-color-white;
   }
 
   .description {

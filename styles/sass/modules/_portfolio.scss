@@ -28,7 +28,7 @@ $port-wrapper-width: 90vw;
     width: $port-wrapper-width;
     position: relative;
     display: inline-block;
-    margin-right: calc((100vw - $port-wrapper-width) * 2);
+    margin-right: calc((100vw - #{$port-wrapper-width}) * 2);
     max-width: 1200px;
   }
   .back {
@@ -137,12 +137,17 @@ $port-wrapper-width: 90vw;
     padding: 5px 20px;
     border: 1px solid $primary_color_white;
     text-transform: uppercase;
+    transition: all 0.3s;
     margin: 2px 5px;
   }
   .front .call-to-action a img {
     height: 15px;
     margin-left: 10px;
     margin-bottom: -2px;
+  }
+  .front .call-to-action a:hover {
+    background: $primary_color_white;
+    color: $primary_color_black;
   }
   .pagecount {
     position: absolute;
