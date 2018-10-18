@@ -25,6 +25,8 @@
   "devDependencies": {
     "cssnano": "^4.1.4",
     "node-sass": "^4.9.4",
+    "parcel-plugin-static-files-copy": "^1.2.4",
     "sass": "^1.14.2"
-  }
+  },
+  "staticPath": "assets"
 }
