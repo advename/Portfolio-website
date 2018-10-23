@@ -36,7 +36,6 @@ const burgerMenu = document.querySelector("#burger-menu");
 const burgerMenuSpan = document.querySelectorAll("#burger-menu span");
 const loader = document.querySelector("#loader");
 let burgerMenuOpen = false;
-let circleDefColor = "#e3e3e3";
 let vh, vw, centerX, centerY, circleMaxW, circleTL;
 let sectionActive = -1; //on page load, hero section is the first visible one
 let allowCircleAnimation = true;
@@ -46,6 +45,7 @@ let mouseY = 0;
 let scrollDir = "down";
 let smoothScrollToInUse = false;
 let scrollTo = 0;
+let scrollTime = 0.1;
 const sections = ["hero", "intro", "tech", "port", "contact"];
 
 //*** Hero
@@ -150,10 +150,10 @@ function init() {
   document.addEventListener("mousemove", mouseAnimations);
 
   //Eventlistener for scroll events mobile and desktop
-  window.addEventListener("wheel", debounce(scrollHandler, 100, true));
+  window.addEventListener("wheel", debounce(scrollHandler, 50, true));
   let mc = new Hammer(window, { treshold: 1000 }); //HammerJS and enable all directions
   mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
-  mc.on("panend panup pandown", debounce(scrollHandler, 100, true));
+  mc.on("panend panup pandown", debounce(scrollHandler, 50, true));
 
   /**For the circles animation, main window is limited to 1200px
    * So if vw is above 1200px, set it to 1200px
@@ -268,12 +268,12 @@ function smoothScrollTo(e) {
   if (portAllowScroll) {
     TweenMax.to(window, 0.7, {
       scrollTo: scrollTo,
-      onStart: function() {},
-      onComplete: function() {
+      onStart: function() {
         if (sectionActive === 3) {
           portAllowScroll = false;
         }
-      }
+      },
+      onComplete: function() {}
     });
   } else {
     portSliderMove(e);
@@ -420,14 +420,6 @@ function sectionsHandler() {
     liAddActiveClass(sectionActive);
   }
 
-  //Make circles black on contact section
-  if (sectionActive != 4) {
-    if (isMobile) circleDefColor = "rgba(227, 227, 227, 0.3);";
-    else if (!isMobile) circleDefColor = "#e3e3e3";
-  } else {
-    circleDefColor = "#e3e3e3";
-  }
-
   //Apply smoothscroll to section
   smoothScrollTo();
 }
@@ -451,8 +443,7 @@ function repositionCircles(cord) {
         left: cord[0].x,
         top: cord[0].y,
         width: cord[0].size,
-        height: cord[0].size,
-        background: circleDefColor
+        height: cord[0].size
       },
       0
     )
@@ -463,8 +454,7 @@ function repositionCircles(cord) {
         left: cord[1].x,
         top: cord[1].y,
         width: cord[1].size,
-        height: cord[1].size,
-        background: circleDefColor
+        height: cord[1].size
       },
       0
     )
@@ -475,8 +465,7 @@ function repositionCircles(cord) {
         left: cord[2].x,
         top: cord[2].y,
         width: cord[2].size,
-        height: cord[2].size,
-        background: circleDefColor
+        height: cord[2].size
       },
       0
     )
@@ -488,7 +477,6 @@ function repositionCircles(cord) {
         top: cord[3].y,
         width: cord[3].size,
         height: cord[3].size,
-        background: circleDefColor,
         onComplete: function() {
           //If tech section, add another TimeLine for line-bar
           if (sectionActive === 2) {
@@ -1308,7 +1296,6 @@ function portUpdateScrollbar() {
 
 //Update circles position to portfolio
 function contactCirclesCoordinates() {
-  circleDefColor = "#202020";
   // x and y are percentage og main element -> max 1200px width and height 100vh
   const cord = [
     {

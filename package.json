@@ -4,29 +4,37 @@
   "description": "Portfolio website",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "sass": "node-sass ./styles/sass/main.scss ./styles/style.css -w",
-    "myParcel": "parcel index.html --public-url . -watch --no-minify",
-    "dev-mode-server": "npm run sass | live-server --no-browser",
-    "live-server-dist": "cd dist & live-server --no-browser",
-    "dev-mode-parcel-combined": "npm run sass | npm run myParcel | npm run live-server-dist",
-    "dev-mode-parcel-only": "parcel index.html",
-    "build-mode-parcel": "parcel build index.html --public-url .",
-    "clear": " cd dist & del *.* /q"
+    "dev-sass": "node-sass src/styles/sass/main.scss src/styles/style.css -w",
+    "dev-server": "cd src && live-server --no-browser",
+    "dev": "npm run dev-sass | npm run dev-server",
+    "=============================": "====================================",
+    "build-sass": "node-sass src/styles/sass/main.scss src/styles/style.css",
+    "build-parcel": "parcel build src/index.html --public-url .",
+    "build": "npm run dist-clear && npm run build-sass && npm run build-parcel ",
+    "build-server": "cd dist && live-server --no-browser",
+    "dist-clear": "rm -r -f dist/*"
   },
   "author": "lars",
   "license": "ISC",
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
     "gsap": "^2.0.2",
     "hammerjs": "^2.0.8",
     "is_js": "^0.9.0",
+    "parcel-plugin-copy": "^1.0.2",
     "validator-js": "^0.2.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
     "cssnano": "^4.1.4",
     "node-sass": "^4.9.4",
     "parcel-plugin-static-files-copy": "^1.2.4",
     "sass": "^1.14.2"
   },
-  "staticPath": "assets"
+  "staticPath": {
+    "source": "src/assets",
+    "target": "dist/assets"
+  }
 }
