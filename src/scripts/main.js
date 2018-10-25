@@ -125,17 +125,12 @@ contactInputEmail.addEventListener("input", contactCheckEmail);
 /* ==========================================================================
    Initilaize
    ========================================================================== */
-document.addEventListener("DOMContentLoaded", () => {
-  beforeInit(); //run before init
-  setTimeout(init, 500); //wait 100ms
-});
-
-//Inject SVG's before init
-function beforeInit() {
-  svgToBeInjected.forEach(svg => {
-    SVGInject(svg);
+document.addEventListener("DOMContentLoaded", function() {
+  SVGInject(svgToBeInjected).then(function() {
+    // all svgs have been injected, run init
+    init();
   });
-}
+});
 
 //Initialize
 function init() {
