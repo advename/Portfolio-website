@@ -157,9 +157,13 @@ function init() {
 
   //Eventlistener for scroll events mobile and desktop
   window.addEventListener("wheel", debounce(scrollHandler, 100, true));
-  let mc = new Hammer(window); //HammerJS and enable all directions
-  mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
-  mc.on("panend panup pandown", debounce(scrollHandler, 100, true));
+
+  //Allow touch eventlistener for mobile only if mobile is true
+  if (isMobile) {
+    let mc = new Hammer(window); //HammerJS and enable all directions
+    mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
+    mc.on("panend panup pandown", debounce(scrollHandler, 100, true));
+  }
 
   /**For the circles animation, main window is limited to 1200px
    * So if vw is above 1200px, set it to 1200px
