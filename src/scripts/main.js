@@ -248,6 +248,7 @@ function mouseAnimations(e) {
 
 // Scroll Handler deciding direction and firing sections handler
 function scrollHandler(e) {
+  e.preventDefault();
   if (is.mobile()) {
     //Handle mobile scrolling
     if (e.deltaY < 0) {
