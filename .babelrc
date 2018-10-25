@@ -6,8 +6,8 @@
         "targets": {
           "browsers": ["defaults"]
         },
-        "useBuiltIns": "true",
-        "debug": "true"
+        "useBuiltIns": "entry",
+        "debug": true
       }
     ]
   ]

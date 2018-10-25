@@ -12,6 +12,7 @@
     "build-parcel": "parcel build src/index.html --public-url .",
     "build": "npm run dist-clear && npm run build-sass && npm run build-parcel ",
     "build-server": "cd dist && live-server --no-browser",
+    "build-babel": "babel src/scripts/main.js -o src/scripts/bb.js",
     "dist-clear": "rm -r -f dist/*"
   },
   "author": "lars",

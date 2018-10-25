@@ -27,6 +27,7 @@ import validator from "../../node_modules/validator-js/src/validator.js"; // doe
    General
    ========================================================================== */
 //*** Variables
+const html = document.querySelector("html");
 const parents = document.querySelectorAll(".parent");
 const circles = document.querySelectorAll(".circles"); //background circles
 const svgToBeInjected = document.querySelectorAll(".inject-svg");
@@ -40,6 +41,7 @@ let burgerMenuOpen = false;
 let vh, vw, centerX, centerY, circleMaxW, circleTL;
 let sectionActive = -1; //on page load, hero section is the first visible one
 let allowCircleAnimation = true;
+let allowSectionsHandler = true;
 let isMobile = false; //used to define if on mobile devices or not
 let mouseX = 0;
 let mouseY = 0;
@@ -154,10 +156,10 @@ function init() {
   document.addEventListener("mousemove", mouseAnimations);
 
   //Eventlistener for scroll events mobile and desktop
-  window.addEventListener("wheel", debounce(scrollHandler, 50, true));
-  let mc = new Hammer(window, { treshold: 1000 }); //HammerJS and enable all directions
+  window.addEventListener("wheel", debounce(scrollHandler, 100, true));
+  let mc = new Hammer(window); //HammerJS and enable all directions
   mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
-  mc.on("panend panup pandown", debounce(scrollHandler, 50, true));
+  mc.on("panend panup pandown", debounce(scrollHandler, 100, true));
 
   /**For the circles animation, main window is limited to 1200px
    * So if vw is above 1200px, set it to 1200px
@@ -181,7 +183,14 @@ function init() {
   introHeadline = introHeadlineDOM.getBoundingClientRect();
 
   //Populate Tech data and display
-  techHurry.addEventListener("click", techToggleCompleteList);
+  techHurry.addEventListener("click", () => {
+    //Bugfix to shortly disable scroll
+    allowSectionsHandler = false;
+    techToggleCompleteList();
+    setTimeout(() => {
+      allowSectionsHandler = true;
+    }, 100);
+  });
   techSetSlideData();
   techDisplayData(); //call twice for smooth slider repeat
   techDisplayData(); //call twice for smooth slider repeat
@@ -258,7 +267,9 @@ function scrollHandler(e) {
       scrollDir = "up";
     }
   }
-  sectionsHandler();
+  if (allowSectionsHandler) {
+    sectionsHandler();
+  }
 }
 
 // Reset function used for debugging
@@ -341,7 +352,7 @@ function toggleBurgerMenu() {
       li.classList.add("nav-animation");
     });
 
-    burgerMenuSpan[1].style.transform = "translateX(-10vw)";
+    burgerMenuSpan[1].style.transform = "translateX(-20vw)";
     burgerMenuSpan[2].style.transform = "rotate(45deg)";
     burgerMenuSpan[2].style.marginTop = "-13px";
     burgerMenuSpan[0].style.transform = "rotate(135deg)";
@@ -1020,6 +1031,8 @@ function techToggleCompleteList() {
     techSliderItemAllImg.forEach(img => {
       img.classList.remove("completeList");
     });
+    techHurry.classList.remove("active");
+    techHurry.blur();
   } else {
     //open complete list
     techSliderTL.pause(0);
@@ -1035,6 +1048,7 @@ function techToggleCompleteList() {
     techSliderItemAllImg.forEach(img => {
       img.classList.add("completeList");
     });
+    techHurry.classList.add("active");
   }
   techCompleteListActive = !techCompleteListActive;
 }
@@ -1048,24 +1062,24 @@ function portCirclesCoordinates() {
   // x and y are percentage og main element -> max 1200px width and height 100vh
   const cord = [
     {
-      size: size(350),
-      x: calcX(25),
+      size: size(30),
+      x: calcX(5),
       y: calcY(25)
     },
     {
-      size: size(350),
-      x: calcX(25),
-      y: calcY(25)
+      size: size(10),
+      x: calcX(65),
+      y: calcY(65)
     },
     {
-      size: size(350),
-      x: calcX(25),
-      y: calcY(25)
+      size: size(20),
+      x: calcX(75),
+      y: calcY(35)
     },
     {
-      size: size(350),
-      x: calcX(25),
-      y: calcY(25)
+      size: size(45),
+      x: calcX(55),
+      y: calcY(85)
     }
   ];
   repositionCircles(cord);

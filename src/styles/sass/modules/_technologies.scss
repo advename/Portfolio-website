@@ -200,6 +200,10 @@ $tech-wrapper-width: 80vw;
     color: $primary_color_black;
     background: $primary_color_white;
   }
+  .hurry.active {
+    color: $primary_color_black;
+    background: $primary_color_white;
+  }
 }
 
 //Keyframes for device switcher
