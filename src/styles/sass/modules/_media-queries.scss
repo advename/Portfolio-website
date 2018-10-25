@@ -6,6 +6,13 @@
   #contact .white-splitter {
     left: 50vw;
   }
+  #port .work.first h2 {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    color: #202020;
+    font-size: 50px;
+  }
 }
 /* Large devices (desktops, 992px and up) */
 @media (max-width: 992px) {
@@ -25,6 +32,13 @@
     height: 80vh;
     position: absolute;
     padding-top: 0;
+  }
+  #port #port .work.first h2 {
+    position: absolute;
+    top: 38%;
+    left: 25%;
+    color: #202020;
+    font-size: 50px;
   }
 }
 
@@ -201,6 +215,13 @@
       text-align: center;
       width: 50%;
       margin: 0px auto 5px auto;
+    }
+    .work.first h2 {
+      position: absolute;
+      top: 57%;
+      left: 26%;
+      color: #202020;
+      font-size: 34px;
     }
   }
 

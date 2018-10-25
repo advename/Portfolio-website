@@ -31,6 +31,15 @@ $port-wrapper-width: 90vw;
     margin-right: calc((100vw - #{$port-wrapper-width}) * 2);
     max-width: 1200px;
   }
+  .work.first {
+  }
+  .work.first h2 {
+    position: absolute;
+    top: 40%;
+    left: 28%;
+    color: #202020;
+    font-size: 50px;
+  }
   .back {
     position: absolute;
     height: $port-wrapper-height;

@@ -780,6 +780,13 @@ nav li:nth-of-type(even) {
   margin-right: calc((100vw - 90vw) * 2);
   max-width: 1200px; }
 
+#port .work.first h2 {
+  position: absolute;
+  top: 40%;
+  left: 28%;
+  color: #202020;
+  font-size: 50px; }
+
 #port .back {
   position: absolute;
   height: 80vh;
@@ -1017,7 +1024,9 @@ nav li:nth-of-type(even) {
     background: none;
     border-bottom: 1px solid #a2a2a2;
     padding-bottom: 5px;
-    min-height: 20px; }
+    min-height: 20px;
+    color: #202020;
+    font-family: "Quicksand", sans-serif; }
   #contact .right input::placeholder,
   #contact .right textarea::placeholder {
     color: #a2a2a2;
@@ -1038,6 +1047,19 @@ nav li:nth-of-type(even) {
   #contact .right input[type="submit"]:hover {
     background: #202020;
     color: white; }
+  #contact .right input[type="submit"]:disabled {
+    border: 1px solid grey;
+    background: grey;
+    cursor: initial;
+    color: #e2e2e2; }
+  #contact .right input[type="submit"]:disabled:hover {
+    border: 1px solid grey;
+    background: grey;
+    cursor: initial;
+    color: #e2e2e2; }
+  #contact input.invalid {
+    color: #ff3030;
+    border-bottom: 1px solid #ff3030; }
   #contact footer {
     position: absolute;
     bottom: 10px;
@@ -1052,7 +1074,13 @@ nav li:nth-of-type(even) {
 /* Extra large devices (large desktops, 1200px and up) */
 @media (max-width: 1200px) {
   #contact .white-splitter {
-    left: 50vw; } }
+    left: 50vw; }
+  #port .work.first h2 {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    color: #202020;
+    font-size: 50px; } }
 
 /* Large devices (desktops, 992px and up) */
 @media (max-width: 992px) {
@@ -1068,7 +1096,13 @@ nav li:nth-of-type(even) {
   #tech .wrapper {
     height: 80vh;
     position: absolute;
-    padding-top: 0; } }
+    padding-top: 0; }
+  #port #port .work.first h2 {
+    position: absolute;
+    top: 38%;
+    left: 25%;
+    color: #202020;
+    font-size: 50px; } }
 
 /* Small devices (landscape phones, 576px and up) */
 @media (max-width: 576px) {
@@ -1196,6 +1230,12 @@ nav li:nth-of-type(even) {
     text-align: center;
     width: 50%;
     margin: 0px auto 5px auto; }
+  #port .work.first h2 {
+    position: absolute;
+    top: 57%;
+    left: 26%;
+    color: #202020;
+    font-size: 34px; }
   #contact .wrapper {
     height: 90vh;
     grid-template-columns: repeat(8, 1fr);
@@ -1224,3 +1264,6 @@ nav li:nth-of-type(even) {
     font-size: 20px; }
   #contact footer p {
     font-size: 12px; } }
+
+.hide {
+  display: none !important; }

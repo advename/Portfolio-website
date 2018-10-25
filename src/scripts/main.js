@@ -20,8 +20,9 @@ import ScrollToPlugin from "gsap/ScrollToPlugin";
 import Hammer from "hammerjs";
 import is from "is_js";
 import validator from "validator-js";
-
+import validator from "../../node_modules/validator-js/src/validator.js"; // does not work because live-server has root in src
 */
+
 /* ==========================================================================
    General
    ========================================================================== */
@@ -103,7 +104,8 @@ let portOffSetTop,
   portMoveDistance,
   portContainerLeft,
   portData,
-  portWork;
+  portWork,
+  portLength;
 let portAllowScroll = true;
 let portAllowSlider = false;
 let portSliderAnimationActive = false;
@@ -112,6 +114,13 @@ let portCurrentPage = 1;
 //*** Contact
 const contactWhiteSplitter = document.querySelector("#contact .white-splitter");
 const contactFooterSpan = document.querySelector("#contact footer span");
+const contactSubmitButton = document.querySelector(
+  "#contact .right input[type='submit']"
+);
+const contactInputEmail = document.querySelector(
+  "#contact .right input[name='email']"
+);
+contactInputEmail.addEventListener("input", contactCheckEmail);
 
 /* ==========================================================================
    Initilaize
@@ -942,6 +951,14 @@ function techSetSlideData() {
     {
       title: "RESTful API",
       img: "restful-api.svg"
+    },
+    {
+      title: "AWS EC2",
+      img: "aws-ec2.svg"
+    },
+    {
+      title: "Scrum",
+      img: "scrum.svg"
     }
   ];
 }
@@ -1003,6 +1020,7 @@ function techToggleCompleteList() {
     techContainer.classList.remove("completeList");
     techSliderItemAll.forEach(item => {
       item.classList.remove("completeList");
+      item.classList.remove("hide");
     });
     techSliderItemAllImg.forEach(img => {
       img.classList.remove("completeList");
@@ -1013,8 +1031,11 @@ function techToggleCompleteList() {
     techSlider.classList.add("completeList");
     techBox.classList.add("completeList");
     techContainer.classList.add("completeList");
-    techSliderItemAll.forEach(item => {
+    techSliderItemAll.forEach((item, i) => {
       item.classList.add("completeList");
+      if (i > techSliderItemAll.length / 2 - 1) {
+        item.classList.add("hide");
+      }
     });
     techSliderItemAllImg.forEach(img => {
       img.classList.add("completeList");
@@ -1032,24 +1053,24 @@ function portCirclesCoordinates() {
   // x and y are percentage og main element -> max 1200px width and height 100vh
   const cord = [
     {
-      size: size(10),
-      x: calcX(50),
-      y: calcY(10)
+      size: size(350),
+      x: calcX(25),
+      y: calcY(25)
     },
     {
-      size: size(10),
-      x: calcX(80),
-      y: calcY(80)
+      size: size(350),
+      x: calcX(25),
+      y: calcY(25)
     },
     {
-      size: size(10),
-      x: calcX(30),
-      y: calcY(70)
+      size: size(350),
+      x: calcX(25),
+      y: calcY(25)
     },
     {
-      size: size(23),
-      x: calcX(10),
-      y: calcY(30)
+      size: size(350),
+      x: calcX(25),
+      y: calcY(25)
     }
   ];
   repositionCircles(cord);
@@ -1125,6 +1146,7 @@ function portDataSetup() {
       linkURL2: ""
     }
   ];
+  portLength = portData.length + 1;
 }
 
 // Display the items from portData using template and clone
@@ -1189,11 +1211,11 @@ function portSliderSetup() {
 
   portContainerWidth = portContainer.getBoundingClientRect().width;
 
-  portMoveDistance = portContainerWidth / portData.length;
+  portMoveDistance = portContainerWidth / portLength;
 
   portContainerLeft = portContainer.offsetLeft;
 
-  portPageCountOutOf.textContent = portData.length + "";
+  portPageCountOutOf.textContent = portLength + "";
 }
 
 //Handler to direct between right or left scroll
@@ -1216,7 +1238,7 @@ function portSliderSlideRight() {
   const moveTo = portContainerLeft - portMoveDistance;
 
   //Check if next page is allowed based on page and if an animation is occuring
-  if (portCurrentPage < portData.length && !portSliderAnimationActive) {
+  if (portCurrentPage < portLength && !portSliderAnimationActive) {
     //Still not over the limit, move one more to left
 
     TweenMax.to(portContainer, 0.7, {
@@ -1231,7 +1253,7 @@ function portSliderSlideRight() {
     portCurrentPage++; // increase page number
     portUpdatePage();
     portUpdateScrollbar();
-  } else if (portCurrentPage === portData.length) {
+  } else if (portCurrentPage === portLength) {
     //over the limit, dont move
     setTimeout(() => {
       portToggleAllowScroll(true);
@@ -1282,9 +1304,9 @@ function portUpdatePage() {
 function portUpdateScrollbar() {
   let barWidth;
   if (vw < 1200) {
-    barWidth = (portCurrentPage / portData.length) * 100 + "vw";
+    barWidth = (portCurrentPage / portLength) * 100 + "vw";
   } else {
-    barWidth = (portCurrentPage / portData.length) * 1200 + "px";
+    barWidth = (portCurrentPage / portLength) * 1200 + "px";
   }
 
   portScrollbar.style.width = barWidth;
@@ -1340,6 +1362,53 @@ function contactFooterSetCurrentYear() {
   let d = new Date();
   contactFooterSpan.textContent = d.getFullYear();
 }
+
+//Check if email is valid
+function contactCheckEmail() {
+  const email = contactInputEmail.value;
+  if (validator.isEmail(email)) {
+    //email validated
+    console.log("Email valid");
+    contactSubmitButton.removeAttribute("disabled");
+    contactInputEmail.classList.remove("invalid");
+  } else {
+    //email not valid
+    console.log("Email not valid");
+    contactSubmitButton.setAttribute("disabled", true);
+    contactInputEmail.classList.add("invalid");
+  }
+}
+
+//Beta, so not currently used
+function contactSendEmail() {
+  const contactInputName = document.querySelector(
+    "#contact .right input[name='first_name']"
+  ).value;
+  const contactInputEmail = document.querySelector(
+    "#contact .right input[name='email']"
+  ).value;
+  const contactInputMessage = document.querySelector(
+    "#contact .right textarea[name='comments']"
+  ).value;
+
+  const data = {
+    email: contactInputEmail,
+    first_name: contactInputName,
+    comments: contactInputMessage
+  };
+
+  fetch("../send_form_email.php", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(res => console.log(res));
+}
+
+/* ==========================================================================
+   Extras
+   ========================================================================== */
 
 // DEBOUNCE FUNCTION
 function debounce(func, wait, immediate) {

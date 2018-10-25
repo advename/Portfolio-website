@@ -64,18 +64,21 @@ if(isset($_POST['email'])) {
     $email_message .= "Email: ".clean_string($email_from)."\n";
     $email_message .= "Comments: ".clean_string($comments)."\n";
  
+  
+
 // create email headers
 $headers = 'From: '.$email_from."\r\n".
 'Reply-To: '.$email_from."\r\n" .
 'X-Mailer: PHP/' . phpversion();
 @mail($email_to, $email_subject, $email_message, $headers);  
+
 ?>
- 
-<!-- include your own success html here -->
- 
-Thank you for contacting us. We will be in touch with you very soon.
- 
+<br>
+<br>
+<br>
+<h3>&nbsp;&nbsp; Thank you, we will get in touch with you shortly! <h3>
+<a href="/">&nbsp;&nbsp;Return to previous page</a>
 <?php
- 
+
 }
 ?>

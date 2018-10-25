@@ -118,6 +118,8 @@ $contact-wrapper-width: 100vw;
     border-bottom: 1px solid #a2a2a2;
     padding-bottom: 5px;
     min-height: 20px;
+    color: $primary_color_black;
+    font-family: "Quicksand", sans-serif;
   }
   .right input::placeholder,
   .right textarea::placeholder {
@@ -142,6 +144,22 @@ $contact-wrapper-width: 100vw;
   .right input[type="submit"]:hover {
     background: $primary_color_black;
     color: white;
+  }
+  .right input[type="submit"]:disabled {
+    border: 1px solid grey;
+    background: grey;
+    cursor: initial;
+    color: #e2e2e2;
+  }
+  .right input[type="submit"]:disabled:hover {
+    border: 1px solid grey;
+    background: grey;
+    cursor: initial;
+    color: #e2e2e2;
+  }
+  input.invalid {
+    color: #ff3030;
+    border-bottom: 1px solid #ff3030;
   }
   footer {
     position: absolute;
