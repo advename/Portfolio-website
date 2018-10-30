@@ -161,10 +161,9 @@ function init() {
   let mc = new Hammer(window); //HammerJS and enable all directions
   //Allow touch eventlistener for mobile only if mobile is true
   if (is.mobile()) {
-    
     mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
-    mc.on("panend panup pandown", debounce(scrollHandler, 100, true));
-    console
+    mc.on("panend panstart", debounce(scrollHandler, 100, true));
+    console;
   }
 
   /**For the circles animation, main window is limited to 1200px
