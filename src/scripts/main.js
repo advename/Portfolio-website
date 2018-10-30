@@ -158,11 +158,13 @@ function init() {
   //Eventlistener for scroll events mobile and desktop
   window.addEventListener("wheel", debounce(scrollHandler, 100, true));
 
+  let mc = new Hammer(window); //HammerJS and enable all directions
   //Allow touch eventlistener for mobile only if mobile is true
-  if (isMobile) {
-    let mc = new Hammer(window); //HammerJS and enable all directions
+  if (is.mobile()) {
+    
     mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
     mc.on("panend panup pandown", debounce(scrollHandler, 100, true));
+    console
   }
 
   /**For the circles animation, main window is limited to 1200px
@@ -252,7 +254,7 @@ function mouseAnimations(e) {
 
 // Scroll Handler deciding direction and firing sections handler
 function scrollHandler(e) {
-  e.preventDefault();
+  console.log("Yoooo");
   if (is.mobile()) {
     //Handle mobile scrolling
     if (e.deltaY < 0) {
