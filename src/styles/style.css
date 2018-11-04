@@ -147,21 +147,21 @@ p {
 /* ==========================================================================
    General
    ========================================================================== */
-html {
-  overflow-y: hidden; }
-
 body {
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  max-width: 100%;
   /*font-family: "Open Sans", sans-serif;*/
   font-family: "Quicksand", sans-serif;
   font-weight: 400;
   /* 400 - regular*/
-  position: relative;
   background: #202020;
-  color: #e3e3e3;
+  color: #e3e3e3; }
+
+#kill-scroll {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0px;
+  z-index: 3000;
+  background: #eb0c0c73;
   overflow: hidden; }
 
 .overflow-hidden {

@@ -253,7 +253,8 @@ function mouseAnimations(e) {
 
 // Scroll Handler deciding direction and firing sections handler
 function scrollHandler(e) {
-  console.log("Yoooo");
+  console.log(e.deltaY);
+  /*
   if (is.mobile()) {
     //Handle mobile scrolling
     if (e.deltaY < 0) {
@@ -276,6 +277,7 @@ function scrollHandler(e) {
   if (allowSectionsHandler) {
     sectionsHandler();
   }
+  */
 }
 
 // Reset function used for debugging
