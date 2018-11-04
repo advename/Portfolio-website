@@ -147,25 +147,22 @@ p {
 /* ==========================================================================
    General
    ========================================================================== */
+html {
+  overflow: hidden; }
+
 body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  max-width: 100%;
   /*font-family: "Open Sans", sans-serif;*/
   font-family: "Quicksand", sans-serif;
   font-weight: 400;
   /* 400 - regular*/
+  position: relative;
   background: #202020;
-  color: #e3e3e3; }
-
-#kill-scroll {
-  height: 100vh;
-  width: 100vw;
-  position: fixed;
-  top: 0px;
-  z-index: 3000;
-  background: #eb0c0c73;
+  color: #e3e3e3;
   overflow: hidden; }
-
-.overflow-hidden {
-  overflow: hidden !important; }
 
 main {
   position: relative;
@@ -1115,6 +1112,8 @@ nav li:nth-of-type(even) {
     min-height: 100vh; }
   nav ul {
     font-size: 35px; }
+  nav li {
+    margin-top: -30px; }
   #hero .wrapper {
     height: 70vh;
     grid-template-rows: repeat(2, 1fr); }

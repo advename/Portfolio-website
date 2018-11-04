@@ -2,29 +2,21 @@
    General
    ========================================================================== */
 html {
-}
-
-body {
-  /*font-family: "Open Sans", sans-serif;*/
-  font-family: "Quicksand", sans-serif;
-  font-weight: 400; /* 400 - regular*/
-  background: $primary_color_black;
-  color: $primary_color_white;
-  //overflow: hidden;
-}
-
-#kill-scroll {
-  height: 100vh;
-  width: 100vw;
-  position: fixed;
-  top: 0px;
-  z-index: 3000;
-  background: #eb0c0c73;
   overflow: hidden;
 }
 
-.overflow-hidden {
-  overflow: hidden !important;
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  max-width: 100%;
+  /*font-family: "Open Sans", sans-serif;*/
+  font-family: "Quicksand", sans-serif;
+  font-weight: 400; /* 400 - regular*/
+  position: relative;
+  background: $primary_color_black;
+  color: $primary_color_white;
+  overflow: hidden;
 }
 
 main {

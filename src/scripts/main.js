@@ -28,6 +28,7 @@ import validator from "../../node_modules/validator-js/src/validator.js"; // doe
    ========================================================================== */
 //*** Variables
 const html = document.querySelector("html");
+const body = document.querySelector("body");
 const parents = document.querySelectorAll(".parent");
 const circles = document.querySelectorAll(".circles"); //background circles
 const svgToBeInjected = document.querySelectorAll(".inject-svg");
@@ -38,7 +39,15 @@ const burgerMenu = document.querySelector("#burger-menu");
 const burgerMenuSpan = document.querySelectorAll("#burger-menu span");
 const loader = document.querySelector("#loader");
 let burgerMenuOpen = false;
-let vh, vw, centerX, centerY, circleMaxW, circleTL;
+let vh,
+  vw,
+  centerX,
+  centerY,
+  circleMaxW,
+  circleTL,
+  touchStart,
+  touchEnd,
+  touchDeltaY;
 let sectionActive = -1; //on page load, hero section is the first visible one
 let allowCircleAnimation = true;
 let allowSectionsHandler = true;
@@ -158,12 +167,17 @@ function init() {
   //Eventlistener for scroll events mobile and desktop
   window.addEventListener("wheel", debounce(scrollHandler, 100, true));
 
-  let mc = new Hammer(window); //HammerJS and enable all directions
+  //let mc = new Hammer(document); //HammerJS and enable all directions
   //Allow touch eventlistener for mobile only if mobile is true
   if (is.mobile()) {
+    /*
     mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
     mc.on("panend panstart", debounce(scrollHandler, 100, true));
-    console;
+    */
+    document.body.addEventListener("touchstart", touchHandler);
+    document.body.addEventListener("touchend", touchHandler);
+    document.body.addEventListener("pointerenter", touchHandler);
+    document.body.addEventListener("pointerleave", touchHandler);
   }
 
   /**For the circles animation, main window is limited to 1200px
@@ -251,19 +265,37 @@ function mouseAnimations(e) {
   heroMouseAnimation(e);
 }
 
-// Scroll Handler deciding direction and firing sections handler
-function scrollHandler(e) {
-  console.log(e.deltaY);
-  /*
-  if (is.mobile()) {
-    //Handle mobile scrolling
-    if (e.deltaY < 0) {
+//Handle touch events on mobile
+function touchHandler(e) {
+  if (e.type === "touchstart") {
+    touchStart = e.changedTouches[0].screenY;
+    touchDeltaY = 0;
+  } else if (e.type === "touchend") {
+    touchEnd = e.changedTouches[0].screenY;
+    touchDeltaY = touchEnd - touchStart;
+    console.log(touchDeltaY);
+
+    if (touchDeltaY < 0) {
       //scrolling down
       scrollDir = "down";
-    } else if (e.deltaY > 0) {
+    } else if (touchDeltaY > 0) {
       //scrolling up
       scrollDir = "up";
     }
+
+    //Only fire if touch distance is bigger than 5px
+    if (Math.abs(touchDeltaY) > 15) {
+      if (allowSectionsHandler) {
+        sectionsHandler();
+      }
+    }
+  }
+}
+
+// Scroll Handler deciding direction and firing sections handler
+function scrollHandler(e) {
+  if (is.mobile()) {
+    //Handle mobile scrolling
   } else if (e.type == "wheel" || !is.mobile()) {
     //Handle Desktop scrolling
     if (e.deltaY > 0) {
@@ -277,7 +309,6 @@ function scrollHandler(e) {
   if (allowSectionsHandler) {
     sectionsHandler();
   }
-  */
 }
 
 // Reset function used for debugging
